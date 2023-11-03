@@ -17,8 +17,9 @@
 		<java.version>1.8</java.version>
 		<lombok-version>1.18.30</lombok-version>
 		<commons-fileupload-version>1.5</commons-fileupload-version>
-		<log4j-version>1.2.17</log4j-version>
+		<!-- <log4j-version>1.2.17</log4j-version>  -->
 		<org.slf4j-version>2.0.9</org.slf4j-version>
+		<junit-version>4.13.2</junit-version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -67,7 +68,7 @@
           <version>${lombok.version}</version>
         </dependency>
         
-        <!-- Logging -->
+        <!-- Logging 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -109,6 +110,7 @@
 			</exclusions>
 			<scope>runtime</scope>
 		</dependency>
+		-->
 		
 		<!-- @Inject -->
 		<dependency>
@@ -124,6 +126,13 @@
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>${commons-fileupload-version}</version>
 		</dependency> 
+		
+		<!-- junit4 사용을 위해 추가함 -->
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+		</dependency>
+		
         
 	</dependencies>
 
