@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.board.model;
+package com.ssafy.enjoytrip.attraction.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
