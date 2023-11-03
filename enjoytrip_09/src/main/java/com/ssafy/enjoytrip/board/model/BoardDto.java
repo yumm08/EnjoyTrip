@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BoardDto {
 
-	@NonNull
 	private int articleNo;
 	@NonNull
 	private String userId;
