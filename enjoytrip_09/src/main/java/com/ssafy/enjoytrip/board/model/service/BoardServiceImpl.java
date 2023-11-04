@@ -19,7 +19,7 @@ public class BoardServiceImpl implements BoardService {
 	private BoardMapper boardMapper;
 
 	@Autowired
-	private BoardServiceImpl(BoardMapper boardMapper) {
+	public BoardServiceImpl(BoardMapper boardMapper) {
 		this.boardMapper = boardMapper;
 	}
 

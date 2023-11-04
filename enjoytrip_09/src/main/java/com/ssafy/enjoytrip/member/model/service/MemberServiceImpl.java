@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.member.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.enjoytrip.member.model.MemberDto;
 import com.ssafy.enjoytrip.member.model.mapper.MemberMapper;
@@ -23,16 +24,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	@Transactional
 	public void updateMember(MemberDto memberDto) {
 		memberMapper.updateMember(memberDto);
 	}
 
 	@Override
+	@Transactional
 	public void joinMember(MemberDto memberDto) {
 		memberMapper.joinMember(memberDto);
 	}
 
 	@Override
+	@Transactional
 	public void delete(String userId) {
 		memberMapper.delete(userId);
 	}
