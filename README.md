@@ -36,11 +36,11 @@
 
 ### 글 작성 : write(게시판 정보)
 
-![board_write]()
+![board_regist](/uploads/d813a4854fad9f141a32dd84653d1e11/board_regist.png)
 
 ### 글 상세보기 : view(게시글 번호)
 
-![board_regist](/uploads/d813a4854fad9f141a32dd84653d1e11/board_regist.png)
+![board_view](/uploads/70a3aef561bc0bd78796e6abe28dbb66/board_view.png)
 
 ### 글 삭제 : delete(게시글 번호)
 
