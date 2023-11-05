@@ -59,38 +59,8 @@ public class BoardController {
 	}
 
 	@PostMapping("/regist")
-	public ResponseEntity<String> write(@RequestBody BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files, HttpSession session) {
+	public ResponseEntity<String> write(@RequestBody BoardDto boardDto, HttpSession session) {
 		logger.debug("write boardDto : {}", boardDto);
-		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-		boardDto.setUserId(memberDto.getUserId());
-
-//		FileUpload 관련 설정.
-		logger.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath, uploadFilePath);
-		logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
-		if (!files[0].isEmpty()) {
-			String today = new SimpleDateFormat("yyMMdd").format(new Date());
-			String saveFolder = uploadPath + File.separator + today;
-			logger.debug("저장 폴더 : {}", saveFolder);
-			File folder = new File(saveFolder);
-			if (!folder.exists())
-				folder.mkdirs();
-			List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
-			for (MultipartFile mfile : files) {
-				FileInfoDto fileInfoDto = new FileInfoDto();
-				String originalFileName = mfile.getOriginalFilename();
-				if (!originalFileName.isEmpty()) {
-					String saveFileName = UUID.randomUUID().toString()
-							+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-					fileInfoDto.setSaveFolder(today);
-					fileInfoDto.setOriginalFile(originalFileName);
-					fileInfoDto.setSaveFile(saveFileName);
-					logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
-					//mfile.transferTo(new File(folder, saveFileName));
-				}
-				fileInfos.add(fileInfoDto);
-			}
-			boardDto.setFileInfos(fileInfos);
-		}
 
 		try {
 			boardService.writeArticle(boardDto);
@@ -112,13 +82,15 @@ public class BoardController {
 		}
 	}
 
-	@GetMapping(value = "/{articleNo}")
+	@GetMapping(value = "/view/{articleNo}")
 	public ResponseEntity<?> view(@PathVariable int articleNo) {
 		logger.debug("view articleNo : {}", articleNo);
 		try {
 			BoardDto boardDto = boardService.getArticle(articleNo);
-			if (boardDto == null) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
-			else {
+			if (boardDto == null) {
+				logger.debug("view articleNo : {}", articleNo);
+				return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+			}else {
 				boardService.updateHit(articleNo);
 				return new ResponseEntity<BoardDto>(boardDto, HttpStatus.OK);
 			}
@@ -128,7 +100,7 @@ public class BoardController {
 	}
 
 	@PutMapping("/{articleNo}")
-	public ResponseEntity<String> update(BoardDto boardDto, @RequestParam Map<String, String> map) {
+	public ResponseEntity<String> update(BoardDto boardDto) {
 		logger.debug("modify boardDto : {}", boardDto);
 		try {
 			boardService.modifyArticle(boardDto);
@@ -142,21 +114,11 @@ public class BoardController {
 	public ResponseEntity<String> delete(@PathVariable int articleNo) {
 		logger.debug("delete articleNo : {}", articleNo);
 		try {
-			boardService.deleteArticle(articleNo, uploadPath);
+			boardService.deleteArticle(articleNo);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
-	}
-
-	@GetMapping(value = "/{sfolder}/{ofile}/{sfile}")
-	public ModelAndView downloadFile(@PathVariable String sfolder,@PathVariable String ofile,
-			@PathVariable String sfile) {
-		Map<String, Object> fileInfo = new HashMap<String, Object>();
-		fileInfo.put("sfolder", sfolder);
-		fileInfo.put("ofile", ofile);
-		fileInfo.put("sfile", sfile);
-		return new ModelAndView("fileDownLoadView", "downloadFile", fileInfo);
 	}
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {

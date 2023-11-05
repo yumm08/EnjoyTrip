@@ -21,8 +21,8 @@ public interface BoardMapper {
 	List<BoardDto> searchListByOther(Map<String, String> param);
 	List<BoardDto> searchListBySubject(Map<String, String> param);
 	List<BoardDto> searchListAll(Map<String, String> param);
-	
-	List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
+
+//	List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
 	void registerFile(BoardDto boardDto) throws Exception;
-	void deleteFile(int articleNo) throws Exception;
+//	void deleteFile(int articleNo) throws Exception;
 }

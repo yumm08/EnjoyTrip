@@ -12,6 +12,6 @@ public interface BoardService {
 	BoardDto getArticle(int articleNo) throws Exception;
 	void updateHit(int articleNo) throws Exception;
 	void modifyArticle(BoardDto boardDto) throws Exception;
-	void deleteArticle(int articleNo, String path) throws Exception;
+	void deleteArticle(int articleNo) throws Exception;
     List<BoardDto> searchList(String key, String word) throws Exception;
 }

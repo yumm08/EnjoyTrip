@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
-import com.ssafy.enjoytrip.board.model.FileInfoDto;
+//import com.ssafy.enjoytrip.board.model.FileInfoDto;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 
 @Service
@@ -20,6 +20,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	public BoardServiceImpl(BoardMapper boardMapper) {
+		super();
 		this.boardMapper = boardMapper;
 	}
 
@@ -29,10 +30,10 @@ public class BoardServiceImpl implements BoardService {
 		System.out.println("글입력 전 dto : " + boardDto);
 		boardMapper.writeArticle(boardDto);
 		System.out.println("글입력 후 dto : " + boardDto);
-		List<FileInfoDto> fileInfos = boardDto.getFileInfos();
-		if (fileInfos != null && !fileInfos.isEmpty()) {
-			boardMapper.registerFile(boardDto);
-		}
+//		List<FileInfoDto> fileInfos = boardDto.getFileInfos();
+//		if (fileInfos != null && !fileInfos.isEmpty()) {
+//			boardMapper.registerFile(boardDto);
+//		}s
 	}
 
 	@Override
@@ -74,15 +75,15 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	@Transactional
-	public void deleteArticle(int articleNo, String path) throws Exception {
-		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
-		boardMapper.deleteFile(articleNo);
+	public void deleteArticle(int articleNo) throws Exception {
+//		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
 		boardMapper.deleteArticle(articleNo);
-		for (FileInfoDto fileInfoDto : fileList) {
-			File file = new File(
-					path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
-			file.delete();
-		}
+//		boardMapper.deleteArticle(articleNo);
+//		for (FileInfoDto fileInfoDto : fileList) {
+//			File file = new File(
+//					path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
+//			file.delete();
+//		}
 	}
 
 }
