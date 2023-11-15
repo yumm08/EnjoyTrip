@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.board.model;
 
+import java.util.List;
+
 import lombok.*;
 
 @Getter
@@ -16,5 +18,6 @@ public class BoardDto {
 	private String content;
 	private int hit;
 	private String registerTime;
+	private List<FileInfoDto> fileInfos;
 
 }

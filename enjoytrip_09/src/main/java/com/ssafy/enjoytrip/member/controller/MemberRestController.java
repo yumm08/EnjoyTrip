@@ -1,5 +1,8 @@
 package com.ssafy.enjoytrip.member.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -75,8 +78,8 @@ public class MemberRestController {
 		System.out.println("info : "+userinfo);
 		
 		if(userinfo != null) {
-			memberService.getMyInfo(userinfo.getUserId());
-			return new ResponseEntity<String>("Get My Info !!", HttpStatus.OK);
+			MemberDto myDto = memberService.getMyInfo(userinfo.getUserId());
+			return new ResponseEntity<MemberDto>(myDto, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -92,6 +95,57 @@ public class MemberRestController {
 			return new ResponseEntity<String>("Bye !!", HttpStatus.OK);
 		} catch(Exception e) {
 			return new ResponseEntity<String>("Can't Delete ..", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	/* ------------------------ 즐겨 찾기 ----------------------------- */
+	
+	@PostMapping("/mark")
+	public ResponseEntity<?> addBookmark(@RequestBody String planId, HttpSession session){
+		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
+		System.out.println("info : "+userinfo);
+		
+		if(userinfo != null) {
+			memberService.addBookmark(userinfo.getUserId(), planId);
+			return new ResponseEntity<String>("Add Bookmark !!", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	@GetMapping("/mark")
+	public ResponseEntity<?> getBookmark(@RequestBody String planId, HttpSession session){
+		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
+		System.out.println("info : "+userinfo);
+		
+		if(userinfo != null) {
+			List<Map<String, String>> bookmarkList = memberService.getBookmark(userinfo.getUserId());
+			return new ResponseEntity<List<Map<String, String>>>(bookmarkList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	@DeleteMapping("/mark")
+	public ResponseEntity<?> delete(@RequestBody String planId, HttpSession session){
+		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
+		System.out.println("info : "+userinfo);
+		
+		if(userinfo != null) {
+			memberService.deleteBookmark(userinfo.getUserId(), planId);
+			return new ResponseEntity<String>("Bookmark Deleted !!", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	@GetMapping("/mark/{planId}")
+	public ResponseEntity<?> getBookmarkDetail(@PathVariable("planId") String planId){
+		if(planId != null) {
+			List<Map<String, String>> bookmarkDetail = memberService.getBookmarkDetail(planId);
+			return new ResponseEntity<List<Map<String, String>>>(bookmarkDetail, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 

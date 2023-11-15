@@ -12,7 +12,7 @@
 	
 	<update id="updateMember" parameterType="memberDto">
 		update trip_member
-		set user_id = #{userId}, user_password = #{userPass}, user_name = #{userName}
+		set user_id = #{userId}, user_password = #{userPass}, user_name = #{userName}, user_nickname = #{userNickname}, user_email = #{userEmail}, user_domain = #{userDomain}
 		where user_id = #{userId}
 	</update>
 
@@ -30,6 +30,33 @@
 		select user_id userId, user_name userName, user_password userPass
 		from trip_member
 		where user_id = #{userId}
+	</select>
+	
+	<!-- 마이 페이지 -->
+	
+	<insert id="addBookmark" parameterType="string">
+		insert into bookmark (plan_id, user_id)
+		values (#{planId}, #{userId})
+	</insert>
+	
+	<select id="getBookmark" parameterType="string" resultType="map">
+		select user_id userId, plan_id planId, plan_title planTitle, update_time UpdateTime
+		from plan_list
+		where user_id = #{userId}
+	</select>
+	
+	<delete id="deleteBookmark" parameterType="string">
+		delete from bookmark
+		where user_id = #{userId} AND plan_id = #{planId}
+	</delete>
+	
+	<select id="getBookmarkDetail" parameterType="string" resultType="map">
+		select a.content_id contentId, content_type_id contentTypeId, title, addr1 addr, first_image image, latitude, longitude, plan_id planId, plan_date planDate, plan_seq planSeq
+		from attraction_info a join (
+				select plan_id, plan_date, plan_seq, content_id
+				from plan_seq
+				where plan_id = #{planId}) p
+			on a.content_id = p.content_id
 	</select>
 	
 </mapper>

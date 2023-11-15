@@ -1,5 +1,8 @@
 package com.ssafy.enjoytrip.member.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +45,27 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public void getMyInfo(String userId) {
-		memberMapper.getMyInfo(userId);
+	public MemberDto getMyInfo(String userId) {
+		return memberMapper.getMyInfo(userId);
 	}
-
+	
+	@Override
+	public void addBookmark(String userId, String planId) {
+		memberMapper.addBookmark(userId, planId);
+	}
+	
+	@Override
+	public List<Map<String, String>> getBookmark(String userId) {
+		return memberMapper.getBookmark(userId);
+	}
+	
+	@Override
+	public void deleteBookmark(String userId, String planId) {
+		memberMapper.deleteBookmark(userId, planId);
+	}
+	
+	@Override
+	public List<Map<String, String>> getBookmarkDetail(String planId) {
+		return memberMapper.getBookmarkDetail(planId);
+	}
 }
