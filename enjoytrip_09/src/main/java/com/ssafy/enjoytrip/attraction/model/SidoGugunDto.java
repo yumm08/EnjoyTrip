@@ -3,7 +3,6 @@ package com.ssafy.enjoytrip.attraction.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,7 +11,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class GugunDto {
+public class SidoGugunDto {
 	private int code;
 	private String name;
 }

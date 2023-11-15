@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.attraction.model.AttractionDto;
-import com.ssafy.enjoytrip.attraction.model.GugunDto;
 import com.ssafy.enjoytrip.attraction.model.SearchConditionDto;
+import com.ssafy.enjoytrip.attraction.model.SidoGugunDto;
 import com.ssafy.enjoytrip.attraction.model.service.AttractionService;
 
 @RestController
@@ -41,11 +41,21 @@ public class AttractionRestController {
 		}
 	}
 	
+	@GetMapping("/sido")
+	public ResponseEntity<?> getSidos(){
+		List<SidoGugunDto> sidoList = attractionService.searchSido();
+		if(!sidoList.isEmpty()) {
+			return new ResponseEntity<List<SidoGugunDto>>(sidoList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+		}
+	}
+	
 	@GetMapping("/{sido}")
 	public ResponseEntity<?> getGuguns(@PathVariable("sido") int sido){
-		List<GugunDto> gugunList = attractionService.searchGugun(sido);
+		List<SidoGugunDto> gugunList = attractionService.searchGugun(sido);
 		if(!gugunList.isEmpty()) {
-			return new ResponseEntity<List<GugunDto>>(gugunList, HttpStatus.OK);
+			return new ResponseEntity<List<SidoGugunDto>>(gugunList, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 		}

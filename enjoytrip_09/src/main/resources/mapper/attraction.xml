@@ -9,8 +9,13 @@
 		from attraction_info
 		where sido_code = #{sido} and gugun_code = #{gugun} and content_type_id = #{contentType}
 	</select>
+	
+	<select id="searchSido" resultType="SidoGugunDto">
+		select sido_code code, sido_name name
+		from sido
+	</select>
 	  
-	<select id="searchGugun" parameterType="int" resultType="map">
+	<select id="searchGugun" parameterType="int" resultType="SidoGugunDto">
 		select gugun_code code, gugun_name name
 		from gugun
 		where sido_code = #{sido}
