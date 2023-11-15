@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.attraction.model.AttractionDto;
@@ -27,12 +28,23 @@ public class AttractionRestController {
 		this.attractionService = attractionService;
 	}
 	
-	@GetMapping("/{sido}/{gugun}/{contentType}")
-	public ResponseEntity<?> getTrips(@PathVariable("sido") int sido, 
-						 @PathVariable("gugun") int gugun, 
-						 @PathVariable("contentType") int contentType) {
-		
-		List<AttractionDto> attractionList = attractionService.searchTrip(new SearchConditionDto(sido, gugun, contentType));
+//	@GetMapping("")
+//	public ResponseEntity<?> getTrips(@RequestParam("sido") int sido, 
+//									  @RequestParam("gugun") int gugun, 
+//									  @RequestParam("contentType") int contentType) {
+//		
+//		List<AttractionDto> attractionList = attractionService.searchTrip(new SearchConditionDto(sido, gugun, contentType));
+//		
+//		if(!attractionList.isEmpty()) {
+//			return new ResponseEntity<List<AttractionDto>>(attractionList, HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+//		}
+//	}
+	
+	@GetMapping("")
+	public ResponseEntity<?> getTrips(SearchConditionDto searchConditionDto) {
+		List<AttractionDto> attractionList = attractionService.searchTrip(searchConditionDto);
 		
 		if(!attractionList.isEmpty()) {
 			return new ResponseEntity<List<AttractionDto>>(attractionList, HttpStatus.OK);
