@@ -13,7 +13,10 @@ import lombok.ToString;
 @NoArgsConstructor
 public class PlanSeqDto {
 	private String planId;
-	private int planSeq;
 	private int planDate;
-	private int content_id;
+	private int planSeq;
+	private int contentId;
+	private String title;
+	private String img;
+	private String overview;
 }

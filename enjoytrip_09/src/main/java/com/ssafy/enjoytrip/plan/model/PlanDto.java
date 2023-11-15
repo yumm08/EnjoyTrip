@@ -16,6 +16,7 @@ import lombok.ToString;
 public class PlanDto {
 	private String planId;
 	private String userId;
+	private String userNickname;
 	private String planTitle;
 	private String updateTime;
 	List<PlanSeqDto> planSeqs;
