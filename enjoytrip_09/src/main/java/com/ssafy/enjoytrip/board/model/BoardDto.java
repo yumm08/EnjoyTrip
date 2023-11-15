@@ -1,7 +1,5 @@
 package com.ssafy.enjoytrip.board.model;
 
-import java.util.List;
-
 import lombok.*;
 
 @Getter

@@ -1,6 +1,5 @@
 package com.ssafy.enjoytrip.board.model.service;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
-//import com.ssafy.enjoytrip.board.model.FileInfoDto;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 
 @Service
