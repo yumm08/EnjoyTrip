@@ -27,13 +27,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	@Transactional
 	public void writeArticle(BoardDto boardDto) throws Exception {
-		System.out.println("글입력 전 dto : " + boardDto);
 		boardMapper.writeArticle(boardDto);
-		System.out.println("글입력 후 dto : " + boardDto);
-//		List<FileInfoDto> fileInfos = boardDto.getFileInfos();
-//		if (fileInfos != null && !fileInfos.isEmpty()) {
-//			boardMapper.registerFile(boardDto);
-//		}s
 	}
 
 	@Override
@@ -76,14 +70,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	@Transactional
 	public void deleteArticle(int articleNo) throws Exception {
-//		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
 		boardMapper.deleteArticle(articleNo);
-//		boardMapper.deleteArticle(articleNo);
-//		for (FileInfoDto fileInfoDto : fileList) {
-//			File file = new File(
-//					path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
-//			file.delete();
-//		}
 	}
 
 }

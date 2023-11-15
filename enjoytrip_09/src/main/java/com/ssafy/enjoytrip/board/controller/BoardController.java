@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
-import com.ssafy.enjoytrip.board.model.FileInfoDto;
 import com.ssafy.enjoytrip.board.model.service.BoardService;
 import com.ssafy.enjoytrip.member.model.MemberDto;
 
@@ -41,15 +40,6 @@ import com.ssafy.enjoytrip.member.model.MemberDto;
 public class BoardController {
 
 	private final Logger logger = LoggerFactory.getLogger(BoardController.class);
-	
-	@Value("${file.path}")
-	private String uploadPath;
-	
-	@Value("${file.path.upload-images}")
-	private String uploadImagePath;
-	
-	@Value("${file.path.upload-files}")
-	private String uploadFilePath;
 
 	private BoardService boardService;
 
@@ -59,7 +49,7 @@ public class BoardController {
 	}
 
 	@PostMapping("/regist")
-	public ResponseEntity<String> write(@RequestBody BoardDto boardDto, HttpSession session) {
+	public ResponseEntity<String> write(@RequestBody BoardDto boardDto) {
 		logger.debug("write boardDto : {}", boardDto);
 
 		try {
@@ -100,7 +90,7 @@ public class BoardController {
 	}
 
 	@PutMapping("/{articleNo}")
-	public ResponseEntity<String> update(BoardDto boardDto) {
+	public ResponseEntity<String> update(@RequestBody BoardDto boardDto) {
 		logger.debug("modify boardDto : {}", boardDto);
 		try {
 			boardService.modifyArticle(boardDto);
