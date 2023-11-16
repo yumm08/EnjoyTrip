@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlanDto {
-	private String planId;
+	private int planNo;
 	private String userId;
 	private String userNickname;
 	private String planTitle;

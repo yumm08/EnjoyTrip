@@ -45,7 +45,7 @@ public class PlanRestController {
 		}
 	}
 	
-	@PutMapping("/{planId}")
+	@PutMapping("/{planNo}")
 	public ResponseEntity<String> update(@RequestBody PlanDto planDto) {
 		logger.debug("modify planDto : {}", planDto);
 		
@@ -57,19 +57,19 @@ public class PlanRestController {
 		}
 	}
 	
-	@DeleteMapping("/{planId}")
-	public ResponseEntity<String> delete(@PathVariable String planId) {
-		logger.debug("delete planId : {}", planId);
+	@DeleteMapping("/{planNo}")
+	public ResponseEntity<String> delete(@PathVariable int planNo) {
+		logger.debug("delete planNo : {}", planNo);
 		
 		try {
-			planService.deletePlan(planId);
+			planService.deletePlan(planNo);
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 		
 	}
-	
+
 	@GetMapping("/list/{word}")
 	public ResponseEntity<?> listByTitle(@PathVariable String word) {
 		logger.debug("search by title : {}", word);
@@ -82,11 +82,11 @@ public class PlanRestController {
 			return exceptionHandling(e);
 		}
 	}
-	
+
 	@GetMapping("/list")
 	public ResponseEntity<?> list() {
 		logger.debug("list all plans");
-		
+
 		try {
 			List<PlanDto> plans = planService.listPlan();
 			if (plans.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
@@ -96,12 +96,12 @@ public class PlanRestController {
 		}
 	}
 	
-	@PostMapping("/view/{planId}")
-	public ResponseEntity<?> view(@PathVariable String planId) {
-		logger.debug("view plan : {}", planId);
+	@GetMapping("/view/{planNo}")
+	public ResponseEntity<?> view(@PathVariable int planNo) {
+		logger.debug("view plan : {}", planNo);
 		
 		try {
-			PlanDto plan = planService.getPlan(planId);
+			PlanDto plan = planService.getPlan(planNo);
 			if (plan == null) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 			else return new ResponseEntity<PlanDto>(plan, HttpStatus.OK);
 		} catch (Exception e) {

@@ -31,14 +31,19 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	@Transactional
 	public void modifyPlan(PlanDto planDto) throws Exception {
+		planMapper.deletePlanSeqs(planDto.getPlanNo());
 		planMapper.modifyPlan(planDto);
+		List<PlanSeqDto> planSeqs = planDto.getPlanSeqs();
+		if (planSeqs != null && !planSeqs.isEmpty()) {
+			planMapper.registPlanSeqs(planDto);
+		}
 	}
 
 	@Override
 	@Transactional
-	public void deletePlan(String planId) throws Exception {
-		planMapper.deletePlan(planId);
-		planMapper.deletePlanSeqs(planId);
+	public void deletePlan(int planNo) throws Exception {
+		planMapper.deletePlan(planNo);
+		planMapper.deletePlanSeqs(planNo);
 	}
 
 	@Override
@@ -48,15 +53,12 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public List<PlanDto> searchListByTitle(String word) throws Exception {
-		List<PlanDto> plans = planMapper.searchListByTitle(word);
-		for
-		
-		return plans;
+		return planMapper.searchListByTitle(word);
 	}
 
 	@Override
-	public PlanDto getPlan(String planId) throws Exception {
-		return planMapper.getPlan(planId);
+	public PlanDto getPlan(int planNo) throws Exception {
+		return planMapper.getPlan(planNo);
 	}
 
 }

@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlanSeqDto {
-	private String planId;
+	private int planNo;
 	private int planDate;
 	private int planSeq;
 	private int contentId;
