@@ -23,12 +23,12 @@ import com.ssafy.enjoytrip.plan.model.service.PlanService;
 @RestController
 @RequestMapping("/plan")
 @CrossOrigin("*")
-public class PlanRestController {
-	private final Logger logger = LoggerFactory.getLogger(PlanRestController.class);
+public class PlanController {
+	private final Logger logger = LoggerFactory.getLogger(PlanController.class);
 
 	private PlanService planService;
 
-	public PlanRestController(PlanService planService) {
+	public PlanController(PlanService planService) {
 		super();
 		this.planService = planService;
 	}
