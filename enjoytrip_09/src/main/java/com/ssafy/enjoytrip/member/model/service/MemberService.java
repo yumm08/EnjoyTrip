@@ -6,14 +6,20 @@ import java.util.Map;
 import com.ssafy.enjoytrip.member.model.MemberDto;
 
 public interface MemberService {
-	MemberDto loginMember(String userId, String userPass);
+	MemberDto loginMember(MemberDto memberDto);
 	void updateMember(MemberDto memberDto);
 	void joinMember(MemberDto memberDto);
 	void delete(String userId);
 	MemberDto getMyInfo(String userId);
+	String findId(MemberDto memberDto);
+	String findPwd(String userId);
 	
-	void addBookmark(String userId, String planId);
+	void saveRefreshToken(String userId, String refreshToken) throws Exception;
+	Object getRefreshToken(String userId) throws Exception;
+	void deleteRefreshToken(String userId) throws Exception;
+	
+	void addBookmark(String userId, String planNo);
 	List<Map<String, String>> getBookmark(String userId);
-	void deleteBookmark(String userId, String planId);
-	List<Map<String, String>> getBookmarkDetail(String planId);
+	void deleteBookmark(String userId, String planNo);
+	List<Map<String, String>> getBookmarkDetail(String planNo);
 }

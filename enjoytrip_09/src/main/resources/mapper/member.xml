@@ -4,8 +4,20 @@
 
 <mapper namespace="com.ssafy.enjoytrip.member.model.mapper.MemberMapper">
 
-	<select id="loginMember" parameterType="string" resultType="memberDto">
-		select user_id userId, user_name userName, user_password userPass
+	<resultMap type="memberDto" id="member">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_password" property="userPass"/>
+		<result column="user_nickname" property="userNickname"/>
+		<result column="user_email" property="userEmail"/>
+		<result column="user_domain" property="userDomain"/>
+		<result column="token" property="refreshToken"/>
+	</resultMap>
+	
+	<parameterMap type="memberDto" id="member" />
+	
+	<select id="loginMember" parameterType="string" resultMap="member">
+		select user_id, user_name, token
 		from trip_member
 		where user_id = #{userId} and user_password = #{userPass} 
 	</select>
@@ -26,11 +38,43 @@
 		where user_id = #{userId}
 	</delete>
 	
-	<select id="getMyInfo" parameterType="string" resultType="memberDto">
-		select user_id userId, user_name userName, user_password userPass
+	<select id="getMyInfo" parameterType="string" resultMap="member">
+		select user_id, user_name, user_password
 		from trip_member
 		where user_id = #{userId}
 	</select>
+	
+	<select id="findId" parameterMap="member" resultType="string">
+		select user_id
+		from trip_member
+		where user_email = #{userEmail} and user_domain = #{userDomain}
+	</select>
+	
+	<select id="findPwd" parameterType="string" resultType="string">
+		select user_password
+		from trip_member
+		where user_id = #{userId}
+	</select>
+	
+	<!-- JWT 토큰 -->
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update trip_member
+		set token = #{token}
+		where user_id = #{userId}
+	</update>
+	
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from trip_member
+		where user_id = #{userId}
+	</select>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update trip_member
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userId}
+	</update>
 	
 	<!-- 마이 페이지 -->
 	

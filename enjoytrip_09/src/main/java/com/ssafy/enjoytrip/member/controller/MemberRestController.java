@@ -1,8 +1,10 @@
 package com.ssafy.enjoytrip.member.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.member.model.MemberDto;
 import com.ssafy.enjoytrip.member.model.service.MemberService;
+import com.ssafy.enjoytrip.util.JWTUtil;
 
 @RestController
 @RequestMapping("/user")
@@ -26,10 +29,12 @@ import com.ssafy.enjoytrip.member.model.service.MemberService;
 public class MemberRestController {
 	
 	private MemberService memberService;
+	private JWTUtil jwtUtil;
 
-	public MemberRestController(MemberService memberService) {
+	public MemberRestController(MemberService memberService, JWTUtil jwtUtil) {
 		super();
 		this.memberService = memberService;
+		this.jwtUtil = jwtUtil;
 	}
 	
 	@PostMapping("/regist")
@@ -43,22 +48,97 @@ public class MemberRestController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody MemberDto userinfo, HttpSession session){
-		MemberDto memberDto = memberService.loginMember(userinfo.getUserId(), userinfo.getUserPass());
-		
-		if(memberDto != null) {
-			session.setAttribute("userinfo", memberDto);
-			System.out.println("login : "+userinfo);
-			return new ResponseEntity<String>("Login !!", HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("Incorrect Info", HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<?> login(@RequestBody MemberDto memberDto){
+//		System.out.println("memberDto : "+memberDto);
+//		log.debug("login user : {}", memberDto);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			MemberDto loginUser = memberService.loginMember(memberDto);
+			if(loginUser != null) {
+				String accessToken = jwtUtil.createAccessToken(loginUser.getUserId());
+				String refreshToken = jwtUtil.createRefreshToken(loginUser.getUserId());
+//				log.debug("access token : {}", accessToken);
+//				log.debug("refresh token : {}", refreshToken);
+				
+//				발급받은 refresh token을 DB에 저장.
+//				System.out.println("loginUser.getUserId() : " + loginUser.getUserId());
+//				System.out.println("refreshToken : " + refreshToken);
+				memberService.saveRefreshToken(loginUser.getUserId(), refreshToken);
+				
+//				JSON으로 token 전달.
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				
+				status = HttpStatus.CREATED;
+			} else {
+				resultMap.put("message", "아이디 또는 패스워드를 확인해주세요.");
+				status = HttpStatus.UNAUTHORIZED;
+			} 
+			
+		} catch (Exception e) {
+//			log.debug("로그인 에러 발생 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
+	@GetMapping("/logout/{userId}")
+	public ResponseEntity<?> logout(@PathVariable("userId") String userId) {
+		// removeToken
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleteRefreshToken(userId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+//			log.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+	}
+	
+	@PostMapping("/id")
+	public ResponseEntity<?> findId(@RequestBody MemberDto memberDto){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			String userId = memberService.findId(memberDto);
+			if(userId != null) {
+				resultMap.put("userId", userId);
+				status = HttpStatus.OK;
+			} else {
+				resultMap.put("message", "이름 또는 이메일을 확인해주세요.");
+				status = HttpStatus.UNAUTHORIZED;
+			} 
+		} catch (Exception e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@PostMapping("/pwd")
+	public ResponseEntity<?> findPwd(@RequestBody String userId){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			String userPass = memberService.findPwd(userId);
+			if(userId != null) {
+				resultMap.put("userPass", userPass);
+				status = HttpStatus.OK;
+			} else {
+				resultMap.put("message", "아이디를 확인해주세요.");
+				status = HttpStatus.UNAUTHORIZED;
+			} 
+		} catch (Exception e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@PutMapping("/update")
@@ -72,17 +152,31 @@ public class MemberRestController {
 		}
 	}
 	
-	@GetMapping("/info")
-	public ResponseEntity<?> myInfo(HttpSession session) {
-		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
-		System.out.println("info : "+userinfo);
-		
-		if(userinfo != null) {
-			MemberDto myDto = memberService.getMyInfo(userinfo.getUserId());
-			return new ResponseEntity<MemberDto>(myDto, HttpStatus.OK);
+	@GetMapping("/info/{userId}")
+	public ResponseEntity<?> myInfo(@PathVariable("userId") String userId, HttpServletRequest request) {
+//		logger.debug("userId : {} ", userId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+//		System.out.println("request.getHeader : " + request.getHeader("Authorization"));
+		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
+//			log.info("사용 가능한 토큰!!!");
+			try {
+//				로그인 사용자 정보.
+				MemberDto memberDto = memberService.getMyInfo(userId);
+//				System.out.println("myInfo memberDto : " + memberDto);
+				resultMap.put("userInfo", memberDto);
+				status = HttpStatus.OK;
+			} catch (Exception e) {
+//				log.error("정보조회 실패 : {}", e);
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
 		} else {
-			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
+//			log.error("사용 불가능 토큰!!!");
+			status = HttpStatus.UNAUTHORIZED;
 		}
+//		System.out.println("status : " + status);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@DeleteMapping("/delete")
@@ -98,15 +192,37 @@ public class MemberRestController {
 		}
 	}
 	
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("refreshToken");
+//		log.debug("token : {}, memberDto : {}", token, memberDto);
+		if (jwtUtil.checkToken(token)) {
+			if (token.equals(memberService.getRefreshToken(memberDto.getUserId()))) {
+				String accessToken = jwtUtil.createAccessToken(memberDto.getUserId());
+//				log.debug("token : {}", accessToken);
+//				log.debug("정상적으로 액세스토큰 재발급!!!");
+				resultMap.put("access-token", accessToken);
+				status = HttpStatus.CREATED;
+			}
+		} else {
+//			log.debug("리프레쉬토큰도 사용불가!!!!!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
 	/* ------------------------ 즐겨 찾기 ----------------------------- */
 	
 	@PostMapping("/mark")
-	public ResponseEntity<?> addBookmark(@RequestBody String planId, HttpSession session){
+	public ResponseEntity<?> addBookmark(@RequestBody String planNo, HttpSession session){
 		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
 		System.out.println("info : "+userinfo);
 		
 		if(userinfo != null) {
-			memberService.addBookmark(userinfo.getUserId(), planId);
+			memberService.addBookmark(userinfo.getUserId(), planNo);
 			return new ResponseEntity<String>("Add Bookmark !!", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
@@ -114,7 +230,7 @@ public class MemberRestController {
 	}
 	
 	@GetMapping("/mark")
-	public ResponseEntity<?> getBookmark(@RequestBody String planId, HttpSession session){
+	public ResponseEntity<?> getBookmark(@RequestBody String planNo, HttpSession session){
 		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
 		System.out.println("info : "+userinfo);
 		
@@ -127,22 +243,22 @@ public class MemberRestController {
 	}
 	
 	@DeleteMapping("/mark")
-	public ResponseEntity<?> delete(@RequestBody String planId, HttpSession session){
+	public ResponseEntity<?> delete(@RequestBody String planNo, HttpSession session){
 		MemberDto userinfo = (MemberDto)session.getAttribute("userinfo");
 		System.out.println("info : "+userinfo);
 		
 		if(userinfo != null) {
-			memberService.deleteBookmark(userinfo.getUserId(), planId);
+			memberService.deleteBookmark(userinfo.getUserId(), planNo);
 			return new ResponseEntity<String>("Bookmark Deleted !!", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 	
-	@GetMapping("/mark/{planId}")
-	public ResponseEntity<?> getBookmarkDetail(@PathVariable("planId") String planId){
-		if(planId != null) {
-			List<Map<String, String>> bookmarkDetail = memberService.getBookmarkDetail(planId);
+	@GetMapping("/mark/{planNo}")
+	public ResponseEntity<?> getBookmarkDetail(@PathVariable("planNo") String planNo){
+		if(planNo != null) {
+			List<Map<String, String>> bookmarkDetail = memberService.getBookmarkDetail(planNo);
 			return new ResponseEntity<List<Map<String, String>>>(bookmarkDetail, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Login First ..", HttpStatus.NOT_ACCEPTABLE);

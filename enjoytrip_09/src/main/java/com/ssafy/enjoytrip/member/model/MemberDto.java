@@ -19,4 +19,5 @@ public class MemberDto {
 	private String userEmail;
 	private String userDomain;
 //	private String userEmail;
+	private String refreshToken;
 }
