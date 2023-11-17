@@ -1,6 +1,8 @@
 package com.ssafy.enjoytrip.plan.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,11 +73,14 @@ public class PlanController {
 	}
 
 	@GetMapping("/list/{word}")
-	public ResponseEntity<?> listByTitle(@PathVariable String word) {
+	public ResponseEntity<?> listByTitle(@PathVariable String word, @RequestBody String userId) {
 		logger.debug("search by title : {}", word);
-		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("word", word);
+		map.put("userId", userId);
+
 		try {
-			List<PlanDto> plans = planService.searchListByTitle(word);
+			List<PlanDto> plans = planService.searchListByTitle(map);
 			if (plans.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 			else return new ResponseEntity<List<PlanDto>>(plans, HttpStatus.OK);
 		} catch (Exception e) {
@@ -84,11 +89,11 @@ public class PlanController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> list() {
-		logger.debug("list all plans");
+	public ResponseEntity<?> list(@RequestBody String userId) {
+		logger.debug("list all plans userId : {}", userId);
 
 		try {
-			List<PlanDto> plans = planService.listPlan();
+			List<PlanDto> plans = planService.listPlan(userId);
 			if (plans.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 			else return new ResponseEntity<List<PlanDto>>(plans, HttpStatus.OK);
 		} catch (Exception e) {

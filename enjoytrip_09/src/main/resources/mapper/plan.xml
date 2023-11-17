@@ -63,7 +63,7 @@
 		where plan_no = #{planNo}
 	</delete>
 
-	<select id="listPlan" resultMap="listPlan">
+	<select id="listPlan" parameterType="String" resultMap="listPlan">
 		select l.plan_no, l.user_id, m.user_nickname, l.plan_title, l.update_time,
 			   (select a.first_image
 				from plan_seq s join attraction_info a
@@ -74,9 +74,10 @@
 				limit 1) as image
 		from plan_list l join trip_member m
 		on l.user_id = m.user_id
+		where l.user_id = #{userId}
 	</select>
 
-	<select id="searchListByTitle" parameterType="String" resultMap="listPlan">
+	<select id="searchListByTitle" parameterType="HashMap" resultMap="listPlan">
 		select l.plan_no, l.user_id, m.user_nickname, l.plan_title, l.update_time,
 				(select a.first_image
 				from plan_seq s join attraction_info a
@@ -88,6 +89,7 @@
 		from plan_list l join trip_member m
 		on l.user_id = m.user_id
 		where l.plan_title like concat('%', #{word}, '%')
+		and l.user_id = #{userId}
 	</select>
 
 	<select id="getPlan" parameterType="int" resultMap="getPlan">

@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.plan.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,13 +48,13 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public List<PlanDto> listPlan() throws Exception {
-		return planMapper.listPlan();
+	public List<PlanDto> listPlan(String userId) throws Exception {
+		return planMapper.listPlan(userId);
 	}
 
 	@Override
-	public List<PlanDto> searchListByTitle(String word) throws Exception {
-		return planMapper.searchListByTitle(word);
+	public List<PlanDto> searchListByTitle(HashMap<String, String> map) throws Exception {
+		return planMapper.searchListByTitle(map);
 	}
 
 	@Override

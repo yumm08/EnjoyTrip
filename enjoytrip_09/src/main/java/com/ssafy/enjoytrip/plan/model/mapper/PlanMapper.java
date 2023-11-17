@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.plan.model.mapper;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -15,8 +16,8 @@ public interface PlanMapper {
 	void deletePlan(int planNo) throws SQLException;
 	void deletePlanSeqs(int planNo) throws SQLException;
 
-	List<PlanDto> listPlan() throws SQLException;
-	List<PlanDto> searchListByTitle(String word) throws SQLException;
+	List<PlanDto> listPlan(String userId) throws SQLException;
+	List<PlanDto> searchListByTitle(HashMap<String, String> map) throws SQLException;
 	
 	PlanDto getPlan(int planNo) throws SQLException;
 	List<PlanSeqDto> getPlanSeqs(int planNo) throws SQLException;
