@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.planboard.model.service;
 
+import com.ssafy.enjoytrip.plan.model.PlanDto;
 import com.ssafy.enjoytrip.planboard.model.PlanBoardDto;
 
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 public interface PlanBoardService {
     void writePlanArticle(PlanBoardDto planBoardDto) throws SQLException;
+    PlanDto getPlan(int planNo) throws SQLException;
     void modifyPlanArticle(PlanBoardDto planBoardDto) throws SQLException;
     void deletePlanArticle(int articleNo) throws SQLException;
 

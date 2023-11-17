@@ -2,6 +2,8 @@ package com.ssafy.enjoytrip.planboard.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -17,6 +19,7 @@ public class PlanBoardDto {
     private int bookmarkCnt;
     private int planNo;
     private String img;
+    private List<PlanReviewDto> reviews;
     private String registerTime;
 
 }

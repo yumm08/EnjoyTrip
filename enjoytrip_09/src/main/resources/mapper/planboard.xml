@@ -4,4 +4,99 @@
 
 <mapper namespace="com.ssafy.enjoytrip.planboard.model.mapper.PlanBoardMapper">
 
+    <resultMap type="planBoardDto" id="planArticles">
+        <result column="article_no" property="articleNo" />
+        <result column="user_nickname" property="userNickname" />
+        <result column="article_title" property="articleTitle" />
+        <result column="article_hit" property="articleHit" />
+        <result column="bookmark_cnt" property="bookmarkCnt" />
+        <result column="register_time" property="registerTime" />
+    </resultMap>
+
+    <resultMap type="planBoardDto" id="planArticleDetail">
+        <collection property="reviews" column="article_no" javaType="list" ofType="planReviewDto" select="getPlanReviews"/>
+    </resultMap>
+
+    <resultMap type="planReviewDto" id="planReview">
+        <result column="article_no" property="articleNo" />
+        <result column="content_id" property="contentId" />
+        <result column="content" property="content" />
+    </resultMap>
+
+    <!-- insert -->
+    <insert id="writePlanArticle" parameterType="planBoardDto">
+        insert into plan_board (user_id, article_title, plan_no, register_time)
+        values (#{userId}, #{articleTitle}, #{planNo}, #{registerTime})
+        <selectKey resultType="int" keyProperty="articleNo"
+                   order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <insert id="writePlanReview" parameterType="planBoardDto">
+        insert into review (article_no, content_id, content)
+        values
+            <foreach collection="reviews" item="review" separator=" , ">
+                (#{articleNo}, #{review.contentId}, #{review.content})
+            </foreach>
+    </insert>
+
+    <!-- update -->
+    <update id="modifyPlanArticle" parameterType="planBoardDto">
+        update plan_board
+        set article_title = #{articleTitle}
+        where article_no = #{articleNo}
+    </update>
+
+    <update id="modifyPlanReview" parameterType="planBoardDto">
+        <foreach collection="reviews" item="review" separator=" , ">
+            update review
+            set content = #{review.content}
+            where article_no = #{articleNo} and content_id = #{review.contentId};
+        </foreach>
+    </update>
+
+    <!-- delete -->
+    <delete id="deletePlanArticle" parameterType="int">
+        delete from plan_board
+        where article_no = #{articleNo}
+    </delete>
+
+    <delete id="deletePlanReview" parameterType="int">
+        delete from review
+        where article_no = #{articleNo}
+    </delete>
+
+    <!-- list -->
+    <select id="searchPlanAll" resultMap="planArticles">
+        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        from plan_board pb join trip_member m
+                                on pb.user_id = m.user_id
+    </select>
+
+    <select id="searchPlanByTitle" parameterType="String" resultMap="planArticles">
+        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        from plan_board pb join trip_member m
+                                on pb.user_id = m.user_id
+        where pb.article_title like concat('%', #{word}, '%')
+    </select>
+
+    <!-- view -->
+    <select id="getPlanArticle" parameterType="String" resultMap="planArticleDetail">
+        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        from plan_board pb join trip_member m
+                                on pb.user_id = m.user_id
+        where article_no = #{articleNo};
+    </select>
+
+    <select id="getPlanReviews" resultMap="planReview">
+        select s.plan_date, s.plan_seq, s.content_id, r.content
+        from plan_board pb join plan_seq s
+                                on pb.plan_no = s.plan_no
+                           join review r
+                                on pb.article_no = r.article_no
+                                and s.content_id = r.content_id
+        where pb.article_no = #{articleNo}
+        order by s.plan_date, s.plan_seq;
+    </select>
 </mapper>

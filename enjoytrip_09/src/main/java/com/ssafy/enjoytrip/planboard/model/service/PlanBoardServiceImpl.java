@@ -1,6 +1,9 @@
 package com.ssafy.enjoytrip.planboard.model.service;
 
+import com.ssafy.enjoytrip.plan.model.PlanDto;
+import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
 import com.ssafy.enjoytrip.planboard.model.PlanBoardDto;
+import com.ssafy.enjoytrip.planboard.model.PlanReviewDto;
 import com.ssafy.enjoytrip.planboard.model.mapper.PlanBoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +16,26 @@ import java.util.List;
 public class PlanBoardServiceImpl implements PlanBoardService {
 
     private PlanBoardMapper planBoardMapper;
+    private PlanMapper planMapper;
 
-    public PlanBoardServiceImpl(PlanBoardMapper planBoardMapper) {
+    public PlanBoardServiceImpl(PlanBoardMapper planBoardMapper, PlanMapper planMapper) {
         this.planBoardMapper = planBoardMapper;
+        this.planMapper = planMapper;
     }
 
     @Override
     @Transactional
     public void writePlanArticle(PlanBoardDto planBoardDto) throws SQLException {
         planBoardMapper.writePlanArticle(planBoardDto);
+        List<PlanReviewDto> planReviews = planBoardDto.getReviews();
+        if (planReviews != null & !planReviews.isEmpty()) {
+            planBoardMapper.writePlanReview(planBoardDto);
+        }
+    }
+
+    @Override
+    public PlanDto getPlan(int planNo) throws SQLException {
+        return planMapper.getPlan(planNo);
     }
 
     @Override
@@ -34,6 +48,7 @@ public class PlanBoardServiceImpl implements PlanBoardService {
     @Transactional
     public void deletePlanArticle(int articleNo) throws SQLException {
         planBoardMapper.deletePlanArticle(articleNo);
+        planBoardMapper.deletePlanReview(articleNo);
     }
 
     @Override

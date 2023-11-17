@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.planboard.controller;
 
+import com.ssafy.enjoytrip.plan.model.PlanDto;
 import com.ssafy.enjoytrip.planboard.model.PlanBoardDto;
 import com.ssafy.enjoytrip.planboard.model.service.PlanBoardService;
 import org.slf4j.Logger;
@@ -38,10 +39,33 @@ public class PlanBoardController {
     }
 
     //update
+    @GetMapping("/modify/{articleNo}")
+    public ResponseEntity<?> getUpdateArticle(@PathVariable int articleNo) {
+        logger.debug("get plan ArticleNo : {}", articleNo);
+
+        try {
+            PlanDto plan = planBoardService.getPlan(articleNo);
+            return new ResponseEntity<PlanDto>(plan, HttpStatus.OK);
+        } catch (SQLException e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @PutMapping("/modify")
+    public ResponseEntity<String> update(@RequestBody PlanBoardDto planBoardDto) {
+        logger.debug("update planArticle : {}", planBoardDto);
+
+        try {
+            planBoardService.modifyPlanArticle(planBoardDto);
+            return new ResponseEntity<String>("success", HttpStatus.OK);
+        } catch (SQLException e) {
+            return exceptionHandling(e);
+        }
+    }
 
     @DeleteMapping("{articleNo}")
     public ResponseEntity<String> delete(@PathVariable int articleNo){
-        logger.debug("delete plan ArticleNo: {}", articleNo);
+        logger.debug("delete plan ArticleNo : {}", articleNo);
 
         try {
             planBoardService.deletePlanArticle(articleNo);
