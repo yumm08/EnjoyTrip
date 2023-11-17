@@ -4,19 +4,34 @@
 
 <mapper namespace="com.ssafy.enjoytrip.attraction.model.mapper.AttractionMapper">
 
-	<!-- 
-	<select id="searchTrip" parameterType="searchConditionDto" resultType="attractionDto">
-		select content_id contentId, content_type_id contentTypeId, title, addr1 addr, first_image image, latitude, longitude 
-		from attraction_info
-		where sido_code = #{sido} and gugun_code = #{gugun} and content_type_id = #{contentType}
-	</select>
-	 -->
+	<resultMap type="attractionDto" id="attraction">
+		<result column="content_id" property="contentId"/>
+		<result column="content_type_id" property="contentTypeId"/>
+		<result column="title" property="title"/>
+		<result column="addr1" property="addr"/>
+		<result column="first_image" property="image"/>
+		<result column="latitude" property="latitude"/>
+		<result column="longitude" property="longitude"/>
+	</resultMap>
 	
-	<select id="searchTrip" parameterType="searchConditionDto" resultType="attractionDto">
-		select content_id contentId, content_type_id contentTypeId, title, addr1 addr, first_image image, latitude, longitude 
+	<resultMap type="ContentTypeDto" id="content">
+		<result column="content_type_id" property="contentTypeId"/>
+		<result column="content_name" property="contentName"/>
+	</resultMap>
+	
+	<select id="searchTrip" parameterType="searchConditionDto" resultMap="attraction">
+		select content_id, content_type_id, title, addr1, first_image, latitude, longitude 
+		from attraction_info
+		where sido_code = #{sido} and gugun_code = #{gugun} and content_type_id = #{contentTypeId}
+	</select>
+	
+	<!-- 
+	<select id="searchTrip" parameterType="searchConditionDto" resultMap="attraction">
+		select content_id, content_type_id, title, addr1, first_image, latitude, longitude 
 		from attraction_info
 		where sido_code = #{sido} and gugun_code = #{gugun}
 	</select>
+	 -->
 	
 	<select id="searchSido" resultType="SidoGugunDto">
 		select sido_code code, sido_name name
@@ -27,6 +42,11 @@
 		select gugun_code code, gugun_name name
 		from gugun
 		where sido_code = #{sido}
+	</select>
+	
+	<select id="searchContents" resultMap="content">
+		select content_type_id, content_name
+		from contents
 	</select>
 	
 </mapper>

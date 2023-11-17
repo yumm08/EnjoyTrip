@@ -40,6 +40,7 @@ public class MemberRestController {
 	@PostMapping("/regist")
 	public ResponseEntity<?> regist(@RequestBody MemberDto memberDto){
 		try{
+			System.out.println("regist member : " + memberDto);
 			memberService.joinMember(memberDto);
 			return new ResponseEntity<String>("Welcome !!", HttpStatus.CREATED);
 		} catch(Exception e) {
@@ -145,6 +146,7 @@ public class MemberRestController {
 	public ResponseEntity<?> update(@RequestBody MemberDto memberDto) {
 		
 		try {
+			System.out.println("update member : " + memberDto);
 			memberService.updateMember(memberDto);
 			return new ResponseEntity<String>("Update !!", HttpStatus.OK);
 		} catch (Exception e) {

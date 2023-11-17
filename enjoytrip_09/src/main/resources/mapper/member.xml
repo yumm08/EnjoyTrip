@@ -29,8 +29,8 @@
 	</update>
 
 	<insert id="joinMember" parameterType="memberDto">
-		insert into trip_member (user_id, user_name, user_password)
-		values (#{userId}, #{userPass}, #{userName})
+		insert into trip_member (user_id, user_name, user_nickname, user_password, user_email, user_domain)
+		values (#{userId}, #{userName}, #{userNickname}, #{userPass}, #{userEmail}, #{userDomain})
 	</insert>
 	
 	<delete id="delete" parameterType="string">
@@ -39,7 +39,7 @@
 	</delete>
 	
 	<select id="getMyInfo" parameterType="string" resultMap="member">
-		select user_id, user_name, user_password
+		select user_id, user_password, user_name, user_nickname, user_email, user_domain
 		from trip_member
 		where user_id = #{userId}
 	</select>

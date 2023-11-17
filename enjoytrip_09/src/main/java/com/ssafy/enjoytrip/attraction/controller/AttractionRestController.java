@@ -8,25 +8,23 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.attraction.model.AttractionDto;
+import com.ssafy.enjoytrip.attraction.model.ContentTypeDto;
 import com.ssafy.enjoytrip.attraction.model.SearchConditionDto;
 import com.ssafy.enjoytrip.attraction.model.SidoGugunDto;
 import com.ssafy.enjoytrip.attraction.model.service.AttractionService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/trip")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class AttractionRestController {
 	
-	private AttractionService attractionService;
-
-	public AttractionRestController(AttractionService attractionService) {
-		super();
-		this.attractionService = attractionService;
-	}
+	private final AttractionService attractionService;
 	
 //	@GetMapping("")
 //	public ResponseEntity<?> getTrips(@RequestParam("sido") int sido, 
@@ -44,7 +42,9 @@ public class AttractionRestController {
 	
 	@GetMapping("")
 	public ResponseEntity<?> getTrips(SearchConditionDto searchConditionDto) {
+//		System.out.println("searchConditionDto : " + searchConditionDto.toString());
 		List<AttractionDto> attractionList = attractionService.searchTrip(searchConditionDto);
+//		System.out.println("attractionList : " + attractionList.toString());
 		
 		if(!attractionList.isEmpty()) {
 			return new ResponseEntity<List<AttractionDto>>(attractionList, HttpStatus.OK);
@@ -68,6 +68,16 @@ public class AttractionRestController {
 		List<SidoGugunDto> gugunList = attractionService.searchGugun(sido);
 		if(!gugunList.isEmpty()) {
 			return new ResponseEntity<List<SidoGugunDto>>(gugunList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+		}
+	}
+	
+	@GetMapping("/content")
+	public ResponseEntity<?> getContents(){
+		List<ContentTypeDto> contentList = attractionService.searchContents();
+		if(!contentList.isEmpty()) {
+			return new ResponseEntity<List<ContentTypeDto>>(contentList, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 		}

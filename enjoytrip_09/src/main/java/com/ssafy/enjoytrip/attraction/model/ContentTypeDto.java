@@ -8,11 +8,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class SearchConditionDto {
-	int sido;
-	int gugun;
+public class ContentTypeDto {
 	int contentTypeId;
+	String contentName;
 }
