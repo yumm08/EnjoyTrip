@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.member.model.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,14 +10,20 @@ import com.ssafy.enjoytrip.member.model.MemberDto;
 
 @Mapper
 public interface MemberMapper {
-	MemberDto loginMember(String userId, String userPass);
+	MemberDto loginMember(MemberDto memberDto);
 	void updateMember(MemberDto memberDto);
 	void joinMember(MemberDto memberDto);
 	void delete(String userId);
 	MemberDto getMyInfo(String userId);
+	String findId(MemberDto memberDto);
+	String findPwd(String userId);
 	
-	void addBookmark(String userId, String planId);
+	void saveRefreshToken(Map<String, String> map) throws SQLException;
+	Object getRefreshToken(String userid) throws SQLException;
+	void deleteRefreshToken(Map<String, String> map) throws SQLException;
+	
+	void addBookmark(String userId, String planNo);
 	List<Map<String, String>> getBookmark(String userId);
-	void deleteBookmark(String userId, String planId);
-	List<Map<String, String>> getBookmarkDetail(String planId);
+	void deleteBookmark(String userId, String planNo);
+	List<Map<String, String>> getBookmarkDetail(String planNo);
 }

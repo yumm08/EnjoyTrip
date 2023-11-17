@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.member.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 		
 	@Override
-	public MemberDto loginMember(String userId, String userPass) {
-		return memberMapper.loginMember(userId, userPass);
+	public MemberDto loginMember(MemberDto memberDto) {
+		return memberMapper.loginMember(memberDto);
 	}
 
 	@Override
@@ -50,8 +51,46 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public void addBookmark(String userId, String planId) {
-		memberMapper.addBookmark(userId, planId);
+	public String findId(MemberDto memberDto) {
+		return memberMapper.findId(memberDto);
+	}
+	
+	@Override
+	public String findPwd(String userId) {
+		return memberMapper.findPwd(userId);
+	}
+	
+	// JWT 토큰
+	
+	@Override
+	public void saveRefreshToken(String userId, String refreshToken) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId);
+		map.put("token", refreshToken);
+//		System.out.println("map in MemberServiceImpl : " + map);
+//		System.out.println("len : " + refreshToken.length());
+		memberMapper.saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String userId) throws Exception {
+		return memberMapper.getRefreshToken(userId);
+	}
+
+	@Override
+	public void deleteRefreshToken(String userId) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId);
+		map.put("token", null);
+		System.out.println("logout map : " + map);
+		memberMapper.deleteRefreshToken(map);
+	}	
+	
+	// 즐겨찾기
+	
+	@Override
+	public void addBookmark(String userId, String planNo) {
+		memberMapper.addBookmark(userId, planNo);
 	}
 	
 	@Override
@@ -60,12 +99,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public void deleteBookmark(String userId, String planId) {
-		memberMapper.deleteBookmark(userId, planId);
+	public void deleteBookmark(String userId, String planNo) {
+		memberMapper.deleteBookmark(userId, planNo);
 	}
 	
 	@Override
-	public List<Map<String, String>> getBookmarkDetail(String planId) {
-		return memberMapper.getBookmarkDetail(planId);
+	public List<Map<String, String>> getBookmarkDetail(String planNo) {
+		return memberMapper.getBookmarkDetail(planNo);
 	}
 }
