@@ -51,10 +51,10 @@
     </update>
 
     <update id="modifyPlanReview" parameterType="planBoardDto">
-        <foreach collection="reviews" item="review" separator=" , ">
+        <foreach collection="reviews" item="review" separator=";">
             update review
             set content = #{review.content}
-            where article_no = #{articleNo} and content_id = #{review.contentId};
+            where article_no = #{articleNo} and content_id = #{review.contentId}
         </foreach>
     </update>
 

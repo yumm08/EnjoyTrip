@@ -42,6 +42,10 @@ public class PlanBoardServiceImpl implements PlanBoardService {
     @Transactional
     public void modifyPlanArticle(PlanBoardDto planBoardDto) throws SQLException {
         planBoardMapper.modifyPlanArticle(planBoardDto);
+        List<PlanReviewDto> planReviews = planBoardDto.getReviews();
+        if (planReviews != null & !planReviews.isEmpty()) {
+            planBoardMapper.modifyPlanReview(planBoardDto);
+        }
     }
 
     @Override
