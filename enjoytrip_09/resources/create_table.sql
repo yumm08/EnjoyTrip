@@ -58,3 +58,13 @@ CREATE TABLE bookmark (
                       plan_no        int,
                       PRIMARY KEY(user_id, plan_no)
 );
+
+Drop table file_info;
+CREATE TABLE file_info (
+                        idx int not null auto_increment,
+                        article_no int NULL,
+                        save_folder VARCHAR(45) NULL,
+                        original_file VARCHAR(50) NULL,
+                        save_file VARCHAR(50) NULL,
+                        PRIMARY KEY (`idx`)
+);

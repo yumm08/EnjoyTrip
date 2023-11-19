@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
-//import com.ssafy.enjoytrip.board.model.FileInfoDto;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 
 @Service

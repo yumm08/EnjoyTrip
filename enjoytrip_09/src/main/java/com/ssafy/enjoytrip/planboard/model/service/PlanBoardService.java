@@ -10,8 +10,8 @@ import java.util.Map;
 public interface PlanBoardService {
     void writePlanArticle(PlanBoardDto planBoardDto) throws SQLException;
     PlanDto getPlan(int planNo) throws SQLException;
-    void modifyPlanArticle(PlanBoardDto planBoardDto) throws SQLException;
-    void deletePlanArticle(int articleNo) throws SQLException;
+    void modifyPlanArticle(PlanBoardDto planBoardDto, String path) throws SQLException;
+    void deletePlanArticle(int articleNo, String path) throws SQLException;
 
     List<PlanBoardDto> searchPlanAll() throws SQLException;
     List<PlanBoardDto> searchPlanByTitle(String word) throws SQLException;

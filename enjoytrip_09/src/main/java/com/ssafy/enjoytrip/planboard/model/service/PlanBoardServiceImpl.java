@@ -2,13 +2,14 @@ package com.ssafy.enjoytrip.planboard.model.service;
 
 import com.ssafy.enjoytrip.plan.model.PlanDto;
 import com.ssafy.enjoytrip.plan.model.mapper.PlanMapper;
+import com.ssafy.enjoytrip.planboard.model.FileInfoDto;
 import com.ssafy.enjoytrip.planboard.model.PlanBoardDto;
 import com.ssafy.enjoytrip.planboard.model.PlanReviewDto;
 import com.ssafy.enjoytrip.planboard.model.mapper.PlanBoardMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,9 +28,15 @@ public class PlanBoardServiceImpl implements PlanBoardService {
     @Transactional
     public void writePlanArticle(PlanBoardDto planBoardDto) throws SQLException {
         planBoardMapper.writePlanArticle(planBoardDto);
+
         List<PlanReviewDto> planReviews = planBoardDto.getReviews();
         if (planReviews != null & !planReviews.isEmpty()) {
             planBoardMapper.writePlanReview(planBoardDto);
+        }
+
+        FileInfoDto images = planBoardDto.getImg();
+        if (images != null) {
+            planBoardMapper.registerFile(planBoardDto);
         }
     }
 
@@ -40,19 +47,38 @@ public class PlanBoardServiceImpl implements PlanBoardService {
 
     @Override
     @Transactional
-    public void modifyPlanArticle(PlanBoardDto planBoardDto) throws SQLException {
+    public void modifyPlanArticle(PlanBoardDto planBoardDto, String path) throws SQLException {
         planBoardMapper.modifyPlanArticle(planBoardDto);
         List<PlanReviewDto> planReviews = planBoardDto.getReviews();
         if (planReviews != null & !planReviews.isEmpty()) {
             planBoardMapper.modifyPlanReview(planBoardDto);
         }
+
+        FileInfoDto imgFile = planBoardMapper.getFile(planBoardDto.getArticleNo());
+        if (imgFile != null) {
+            File file = new File(path + File.separator + imgFile.getSaveFolder() + File.separator + imgFile.getSaveFile());
+            file.delete();
+        }
+
+        FileInfoDto images = planBoardDto.getImg();
+        if (images != null) {
+            planBoardMapper.registerFile(planBoardDto);
+        }
     }
 
     @Override
     @Transactional
-    public void deletePlanArticle(int articleNo) throws SQLException {
+    public void deletePlanArticle(int articleNo, String path) throws SQLException {
         planBoardMapper.deletePlanArticle(articleNo);
         planBoardMapper.deletePlanReview(articleNo);
+
+        FileInfoDto imgFile = planBoardMapper.getFile(articleNo);
+        planBoardMapper.deleteFile(articleNo);
+        if (imgFile != null) {
+            File file = new File(path + File.separator + imgFile.getSaveFolder() + File.separator + imgFile.getSaveFile());
+            file.delete();
+        }
+
     }
 
     @Override

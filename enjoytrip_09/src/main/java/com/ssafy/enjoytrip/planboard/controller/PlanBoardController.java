@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.planboard.controller;
 import com.ssafy.enjoytrip.plan.model.PlanDto;
 import com.ssafy.enjoytrip.planboard.model.PlanBoardDto;
 import com.ssafy.enjoytrip.planboard.model.service.PlanBoardService;
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,15 @@ import java.util.List;
 @CrossOrigin("*")
 public class PlanBoardController {
     private final Logger logger = LoggerFactory.getLogger(PlanBoardController.class);
+
+    @Value("${file.path}")
+    private String uploadPath;
+
+    @Value("${file.path.upload-images}")
+    private String uploadImagePath;
+
+    @Value("${file.path.upload-files}")
+    private String uploadFilePath;
 
     private PlanBoardService planBoardService;
 
@@ -56,7 +66,7 @@ public class PlanBoardController {
         logger.debug("update planArticle : {}", planBoardDto);
 
         try {
-            planBoardService.modifyPlanArticle(planBoardDto);
+            planBoardService.modifyPlanArticle(planBoardDto, uploadPath);
             return new ResponseEntity<String>("success", HttpStatus.OK);
         } catch (SQLException e) {
             return exceptionHandling(e);
@@ -68,7 +78,7 @@ public class PlanBoardController {
         logger.debug("delete plan ArticleNo : {}", articleNo);
 
         try {
-            planBoardService.deletePlanArticle(articleNo);
+            planBoardService.deletePlanArticle(articleNo, uploadPath);
             return new ResponseEntity<String>("success", HttpStatus.OK);
         } catch (SQLException e) {
             return exceptionHandling(e);
