@@ -13,12 +13,14 @@
         <result column="register_time" property="registerTime" />
     </resultMap>
 
-    <resultMap type="planBoardDto" id="planArticleDetail">
+    <resultMap type="planBoardDto" id="planArticleDetail" extends="planArticles">
         <collection property="reviews" column="article_no" javaType="list" ofType="planReviewDto" select="getPlanReviews"/>
     </resultMap>
 
     <resultMap type="planReviewDto" id="planReview">
         <result column="article_no" property="articleNo" />
+        <result column="plan_date" property="date" />
+        <result column="plan_seq" property="seq" />
         <result column="content_id" property="contentId" />
         <result column="content" property="content" />
     </resultMap>
@@ -82,21 +84,21 @@
     </select>
 
     <!-- view -->
-    <select id="getPlanArticle" parameterType="String" resultMap="planArticleDetail">
+    <select id="getPlanArticle" parameterType="int" resultMap="planArticleDetail">
         select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
-        where article_no = #{articleNo};
+        where pb.article_no = #{articleNo}
     </select>
 
     <select id="getPlanReviews" resultMap="planReview">
-        select s.plan_date, s.plan_seq, s.content_id, r.content
+        select pb.article_no, s.plan_date, s.plan_seq, s.content_id, r.content
         from plan_board pb join plan_seq s
                                 on pb.plan_no = s.plan_no
                            join review r
                                 on pb.article_no = r.article_no
                                 and s.content_id = r.content_id
         where pb.article_no = #{articleNo}
-        order by s.plan_date, s.plan_seq;
+        order by s.plan_date, s.plan_seq
     </select>
 </mapper>
