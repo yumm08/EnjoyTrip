@@ -9,6 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 public class PlanReviewDto {
     private int articleNo;
-    private String contentId;
+    private int date;
+    private int seq;
+    private int contentId;
     private String content;
 }
