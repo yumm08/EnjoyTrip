@@ -46,10 +46,9 @@ CREATE TABLE plan_list (
 Drop table plan_seq;
 CREATE TABLE plan_seq (
                       plan_no       int,
-                      plan_date	    int,
                       plan_seq		int,
                       content_id	int,
-                      PRIMARY KEY(plan_no, plan_date, plan_seq)
+                      PRIMARY KEY(plan_no, plan_seq)
 );
 
 Drop table bookmark;
@@ -68,3 +67,20 @@ CREATE TABLE file_info (
                         save_file VARCHAR(50) NULL,
                         PRIMARY KEY (`idx`)
 );
+
+drop table contents;
+CREATE TABLE contents (
+                          content_type_id    int,
+                          content_name       VARCHAR(20),
+                          PRIMARY KEY(content_type_id)
+);
+
+INSERT INTO contents (content_type_id, content_name)
+VALUES  (12, "관광지"),
+        (14, "문화시설"),
+        (15, "축제공연행사"),
+        (25, "여행코스"),
+        (28, "레포츠"),
+        (32, "숙박"),
+        (38, "쇼핑"),
+        (39, "음식점");

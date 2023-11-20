@@ -21,9 +21,8 @@
 	</resultMap>
 
 	<resultMap type="planSeqDto" id="planSeqs">
-		<result column="plan_date" property="planDate" />
-		<result column="plan_seq" property="planSeq" />
 		<result column="content_id" property="contentId" />
+		<result column="plan_seq" property="planSeq" />
 		<result column="title" property="title" />
 		<result column="first_image" property="img" />
 		<result column="overview" property="overview" />
@@ -39,10 +38,10 @@
 	</insert>
 	
 	<insert id="registPlanSeqs" parameterType="planDto">
-		insert into plan_seq (plan_no, plan_date, plan_seq, content_id)
+		insert into plan_seq (plan_no, plan_seq, content_id)
 		values
 		    <foreach collection="planSeqs" item="seq" separator=" , ">
-				(#{planNo}, #{seq.planDate}, #{seq.planSeq}, #{seq.contentId})
+				(#{planNo}, #{seq.planSeq}, #{seq.contentId})
 			</foreach>
 	</insert>
 	
@@ -70,7 +69,7 @@
 								on s.content_id = a.content_id
 				where l.plan_no = s.plan_no
 				  	and a.first_image != ""
-				order by s.plan_date, s.plan_seq
+				order by s.plan_seq
 				limit 1) as image
 		from plan_list l join trip_member m
 		on l.user_id = m.user_id
@@ -84,7 +83,7 @@
 								on s.content_id = a.content_id
 				where l.plan_no = s.plan_no
 					and a.first_image != ""
-				order by s.plan_date, s.plan_seq
+				order by s.plan_seq
 				limit 1) as image
 		from plan_list l join trip_member m
 		on l.user_id = m.user_id
@@ -100,12 +99,12 @@
 	</select>
 
 	<select id="getPlanSeqs" resultMap="planSeqs">
-		select s.plan_date, s.content_id, s.plan_seq, a.title, a.first_image, d.overview
+		select s.content_id, s.plan_seq, a.title, a.first_image, d.overview
 		from plan_seq s join attraction_info a
 							 on s.content_id = a.content_id
 						join attraction_description d
 							 on s.content_id = d.content_id
 		where s.plan_no = #{planNo}
-		order by s.plan_date, s.plan_seq
+		order by s.plan_seq
 	</select>
 </mapper>
