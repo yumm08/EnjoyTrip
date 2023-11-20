@@ -60,11 +60,23 @@ public class BoardController {
 		}
 	}
 	
-	@GetMapping(value = "/{key}/{word}")
-	public ResponseEntity<?> list(@PathVariable String key, @PathVariable String word) {
+	@GetMapping(value = "list/{word}")
+	public ResponseEntity<?> listBySubject(@PathVariable String word) {
 		List<BoardDto> boards;
 		try {
-			boards = boardService.searchList(key, word);
+			boards = boardService.searchListBySubject(word);
+			if (boards.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+			else return new ResponseEntity<List<BoardDto>>(boards, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	@GetMapping(value = "list")
+	public ResponseEntity<?> listAll() {
+		List<BoardDto> boards;
+		try {
+			boards = boardService.searchListAll();
 			if (boards.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 			else return new ResponseEntity<List<BoardDto>>(boards, HttpStatus.OK);
 		} catch (Exception e) {

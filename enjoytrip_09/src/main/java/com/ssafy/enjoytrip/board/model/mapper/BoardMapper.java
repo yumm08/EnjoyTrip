@@ -16,9 +16,6 @@ public interface BoardMapper {
 	void modifyArticle(BoardDto boardDto) throws SQLException;
 	void deleteArticle(int articleNo) throws SQLException;
 
-	List<BoardDto> searchListByOther(Map<String, String> param);
-	List<BoardDto> searchListBySubject(Map<String, String> param);
-	List<BoardDto> searchListAll(Map<String, String> param);
-
-	void registerFile(BoardDto boardDto) throws Exception;
+	List<BoardDto> searchListBySubject(String word) throws SQLException;
+	List<BoardDto> searchListAll() throws SQLException;
 }

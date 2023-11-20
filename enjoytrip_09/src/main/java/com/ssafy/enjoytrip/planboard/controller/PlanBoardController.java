@@ -118,7 +118,10 @@ public class PlanBoardController {
         try {
             PlanBoardDto planArticle = planBoardService.getPlanArticle(articleNo);
             if (planArticle == null) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
-            else return new ResponseEntity<PlanBoardDto>(planArticle, HttpStatus.OK);
+            else {
+                planBoardService.updateHit(articleNo);
+                return new ResponseEntity<PlanBoardDto>(planArticle, HttpStatus.OK);
+            }
         } catch (SQLException e) {
             return exceptionHandling(e);
         }

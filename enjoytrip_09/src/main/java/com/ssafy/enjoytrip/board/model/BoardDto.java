@@ -14,9 +14,10 @@ public class BoardDto {
 	private int articleNo;
 	@NonNull
 	private String userId;
+	private String userNickname;
 	private String subject;
 	private String content;
-	private int hit;
+	private int articleHit;
 	private String registerTime;
 
 }

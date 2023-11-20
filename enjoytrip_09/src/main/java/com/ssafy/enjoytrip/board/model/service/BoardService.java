@@ -13,5 +13,6 @@ public interface BoardService {
 	void updateHit(int articleNo) throws Exception;
 	void modifyArticle(BoardDto boardDto) throws Exception;
 	void deleteArticle(int articleNo) throws Exception;
-    List<BoardDto> searchList(String key, String word) throws Exception;
+	List<BoardDto> searchListAll() throws Exception;
+    List<BoardDto> searchListBySubject(String word) throws Exception;
 }

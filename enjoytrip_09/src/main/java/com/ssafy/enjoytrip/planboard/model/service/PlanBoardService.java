@@ -17,4 +17,5 @@ public interface PlanBoardService {
     List<PlanBoardDto> searchPlanByTitle(String word) throws SQLException;
 
     PlanBoardDto getPlanArticle(int articleNo) throws SQLException;
+    void updateHit(int articleNo) throws SQLException;
 }

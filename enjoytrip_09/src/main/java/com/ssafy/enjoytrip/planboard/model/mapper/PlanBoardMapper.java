@@ -26,4 +26,5 @@ public interface PlanBoardMapper {
 
     PlanBoardDto getPlanArticle(int articleNo) throws SQLException;
     PlanBoardDto getPlanReviews(int articleNo) throws SQLException;
+    void updateHit(int articleNo) throws SQLException;
 }

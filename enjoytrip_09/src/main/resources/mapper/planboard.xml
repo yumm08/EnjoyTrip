@@ -41,17 +41,17 @@
         </selectKey>
     </insert>
 
-    <insert id="registerFile" parameterType="boardDto">
-        insert into file_info (article_no, save_folder, original_file, save_file)
-        values (#{articleNo}, #{img.saveFolder}, #{img.originalFile}, #{img.saveFile})
-    </insert>
-
     <insert id="writePlanReview" parameterType="planBoardDto">
         insert into review (article_no, content_id, content)
         values
             <foreach collection="reviews" item="review" separator=" , ">
                 (#{articleNo}, #{review.contentId}, #{review.content})
             </foreach>
+    </insert>
+
+    <insert id="registerFile" parameterType="boardDto">
+        insert into file_info (article_no, save_folder, original_file, save_file)
+        values (#{articleNo}, #{img.saveFolder}, #{img.originalFile}, #{img.saveFile})
     </insert>
 
     <!-- update -->
@@ -90,6 +90,7 @@
         select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
+        order by pb.article_no desc
     </select>
 
     <select id="searchPlanByTitle" parameterType="String" resultMap="planArticles">
@@ -97,6 +98,7 @@
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         where pb.article_title like concat('%', #{word}, '%')
+        order by pb.article_no desc
     </select>
 
     <select id="getFile" resultMap="file">
@@ -123,5 +125,11 @@
         where pb.article_no = #{articleNo}
         order by s.plan_seq
     </select>
+
+    <update id="updateHit" parameterType="int">
+        update plan_board
+        set article_hit = article_hit + 1
+        where article_no = #{articleNo}
+    </update>
 
 </mapper>

@@ -7,69 +7,64 @@
 	<resultMap type="boardDto" id="article">
 		<result column="article_no" property="articleNo" />
 		<result column="user_id" property="userId" />
+		<result column="user_nickname" property="userNickname" />
 		<result column="subject" property="subject" />
 		<result column="content" property="content" />
-		<result column="hit" property="hit" />
+		<result column="article_hit" property="articleHit" />
 		<result column="register_time" property="registerTime" />
 	</resultMap>
 
 	<insert id="writeArticle" parameterType="boardDto">
-		insert into board (user_id, subject, content, hit, register_time)
-		values (#{userId}, #{subject}, #{content}, 0, now())
+		insert into free_board (user_id, subject, content, register_time)
+		values (#{userId}, #{subject}, #{content}, now())
 		<selectKey resultType="int" keyProperty="articleNo"
 			order="AFTER">
 			select last_insert_id()
 		</selectKey>
 	</insert>
 
-	<select id="searchListByOther" parameterType="map"
-		resultMap="article">
-		select article_no, user_id, subject, content, hit,
-			   register_time
-		from board
-		where ${key} = #{word}
-		order by article_no desc
-	</select>
-
 	<select id="searchListAll" parameterType="map"
 		resultMap="article">
-		select article_no, user_id, subject, content, hit,
+		select fb.article_no, fb.user_id, m.user_nickname, fb.subject, fb.content, fb.article_hit,
 			   register_time
-		from board
-		order by article_no desc
+		from free_board fb join trip_member m
+								on fb.user_id = m.user_id
+		order by fb.article_no desc
 	</select>
 
-	<select id="searchListBySubject" parameterType="map"
+	<select id="searchListBySubject" parameterType="String"
 		resultMap="article">
-		select article_no, user_id, subject, content, hit,
-		register_time
-		from board
-		where subject like concat('%', #{word}, '%')
-		order by article_no desc
+		select fb.article_no, fb.user_id, m.user_nickname, fb.subject, fb.content, fb.article_hit,
+			   register_time
+		from free_board fb join trip_member m
+								on fb.user_id = m.user_id
+		where fb.subject like concat('%', #{word}, '%')
+		order by fb.article_no desc
 	</select>
 
 	<select id="getArticle" parameterType="int"
 		resultMap="article">
-		select article_no, user_id, subject, content, hit,
-		register_time
-		from board
-		where article_no = #{articleNo}
+		select fb.article_no, fb.user_id, m.user_nickname, fb.subject, fb.content, fb.article_hit,
+			   register_time
+		from free_board fb join trip_member m
+								on fb.user_id = m.user_id
+		where fb.article_no = #{articleNo}
 	</select>
 	
 	<update id="updateHit" parameterType="int">
-		update board
-		set hit = hit + 1
+		update free_board
+		set article_hit = article_hit + 1
 		where article_no = #{articleNo}
 	</update>
 
 	<update id="modifyArticle" parameterType="boardDto">
-		update board
+		update free_board
 		set subject = #{subject}, content = #{content}
 		where article_no = #{articleNo}
 	</update>
 
 	<delete id="deleteArticle" parameterType="int">
-		delete from board
+		delete from free_board
 		where article_no = #{articleNo}
 	</delete>
 

@@ -30,24 +30,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardDto> searchList(String key, String word) throws Exception {
-		Map<String, String> param = new HashMap<String, String>();
+	public List<BoardDto> searchListAll() throws Exception {
+		return boardMapper.searchListAll();
+	}
 
-		if ("userid".equals(key))
-			key = "user_id";
-		param.put("key", key.isEmpty() ? "" : key);
-		param.put("word", word.isEmpty() ? "" : word);
-		if (!key.isEmpty() && !word.isEmpty()) {
-			if ("subject".equals(key)) {
-				System.out.println("subject");
-				return boardMapper.searchListBySubject(param);
-			} else {
-				System.out.println("else");
-				return boardMapper.searchListByOther(param);
-			}
-		}
-		System.out.println("all");
-		return boardMapper.searchListAll(param);
+	@Override
+	public List<BoardDto> searchListBySubject(String word) throws Exception {
+		return boardMapper.searchListBySubject(word);
 	}
 	
 	@Override

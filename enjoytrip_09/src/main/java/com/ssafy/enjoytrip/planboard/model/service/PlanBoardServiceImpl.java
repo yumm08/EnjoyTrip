@@ -95,4 +95,9 @@ public class PlanBoardServiceImpl implements PlanBoardService {
     public PlanBoardDto getPlanArticle(int articleNo) throws SQLException {
         return planBoardMapper.getPlanArticle(articleNo);
     }
+
+    @Override
+    public void updateHit(int articleNo) throws SQLException {
+        planBoardMapper.updateHit(articleNo);
+    }
 }
