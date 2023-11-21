@@ -22,6 +22,7 @@
         <result column="article_no" property="articleNo" />
         <result column="plan_seq" property="seq" />
         <result column="content_id" property="contentId" />
+        <result column="title" property="contentTitle" />
         <result column="first_image" property="image" />
         <result column="content" property="content" />
     </resultMap>
@@ -117,7 +118,7 @@
     </select>
 
     <select id="getPlanReviews" resultMap="planReview">
-        select pb.article_no, s.plan_seq, s.content_id, a.first_image, r.content
+        select pb.article_no, s.plan_seq, s.content_id, a.title, a.first_image, r.content
         from plan_board pb join plan_seq s
                                 on pb.plan_no = s.plan_no
                            join review r
