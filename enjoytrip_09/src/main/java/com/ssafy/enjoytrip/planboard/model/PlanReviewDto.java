@@ -11,5 +11,6 @@ public class PlanReviewDto {
     private int articleNo;
     private int seq;
     private int contentId;
+    private String image;
     private String content;
 }
