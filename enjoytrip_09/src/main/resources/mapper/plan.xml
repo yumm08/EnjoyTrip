@@ -98,7 +98,7 @@
 		where plan_no = #{planNo}
 	</select>
 
-	<select id="getPlanSeqs" resultMap="planSeqs">
+	<select id="getPlanSeqs" parameterType="int" resultMap="planSeqs">
 		select s.content_id, s.plan_seq, a.title, a.first_image, d.overview
 		from plan_seq s join attraction_info a
 							 on s.content_id = a.content_id

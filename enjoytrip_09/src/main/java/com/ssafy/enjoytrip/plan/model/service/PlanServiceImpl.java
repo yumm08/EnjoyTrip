@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.plan.model.service;
 
 import java.util.HashMap;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +61,12 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public PlanDto getPlan(int planNo) throws Exception {
 		return planMapper.getPlan(planNo);
+	}
+	
+	@Override
+	public List<PlanSeqDto> getPlanSeqs(int planNo) throws Exception {
+//		System.out.println("imple 까지 됨");
+		return planMapper.getPlanSeqs(planNo);
 	}
 
 }

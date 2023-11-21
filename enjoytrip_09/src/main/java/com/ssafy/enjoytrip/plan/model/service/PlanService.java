@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssafy.enjoytrip.plan.model.PlanDto;
+import com.ssafy.enjoytrip.plan.model.PlanSeqDto;
 
 public interface PlanService {
 	void registPlan(PlanDto planDto) throws Exception;
@@ -15,4 +16,6 @@ public interface PlanService {
 	List<PlanDto> searchListByTitle(HashMap<String, String> map) throws Exception;
 	
 	PlanDto getPlan(int planNo) throws Exception;
+	
+	List<PlanSeqDto> getPlanSeqs(int planNo) throws Exception;
 }

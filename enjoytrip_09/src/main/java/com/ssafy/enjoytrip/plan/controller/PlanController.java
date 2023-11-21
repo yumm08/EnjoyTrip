@@ -2,7 +2,6 @@ package com.ssafy.enjoytrip.plan.controller;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.plan.model.PlanDto;
+import com.ssafy.enjoytrip.plan.model.PlanSeqDto;
 import com.ssafy.enjoytrip.plan.model.service.PlanService;
 
 @RestController
@@ -109,6 +109,21 @@ public class PlanController {
 			PlanDto plan = planService.getPlan(planNo);
 			if (plan == null) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
 			else return new ResponseEntity<PlanDto>(plan, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+		
+	}
+	
+	@GetMapping("/seq/{planNo}")
+	public ResponseEntity<?> getPlanSeqs(@PathVariable int planNo) {
+		logger.debug("getPlanSeqs : {}", planNo);
+		
+		try {
+			List<PlanSeqDto> seq = planService.getPlanSeqs(planNo);
+//			System.out.println("seq list : "+seq);
+			if (seq.isEmpty()) return new ResponseEntity<String>("no data", HttpStatus.NO_CONTENT);
+			else return new ResponseEntity<List<PlanSeqDto>>(seq, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
