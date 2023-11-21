@@ -10,13 +10,12 @@
 		<result column="user_password" property="userPass"/>
 		<result column="user_nickname" property="userNickname"/>
 		<result column="user_email" property="userEmail"/>
-		<result column="user_domain" property="userDomain"/>
 		<result column="token" property="refreshToken"/>
 	</resultMap>
 	
 	<parameterMap type="memberDto" id="member" />
 	
-	<select id="loginMember" parameterType="string" resultMap="member">
+	<select id="loginMember" parameterType="memberDto" resultMap="member">
 		select user_id, user_name, token
 		from trip_member
 		where user_id = #{userId} and user_password = #{userPass} 
@@ -24,13 +23,13 @@
 	
 	<update id="updateMember" parameterType="memberDto">
 		update trip_member
-		set user_id = #{userId}, user_password = #{userPass}, user_name = #{userName}, user_nickname = #{userNickname}, user_email = #{userEmail}, user_domain = #{userDomain}
+		set user_id = #{userId}, user_password = #{userPass}, user_name = #{userName}, user_nickname = #{userNickname}, user_email = #{userEmail}
 		where user_id = #{userId}
 	</update>
 
 	<insert id="joinMember" parameterType="memberDto">
-		insert into trip_member (user_id, user_name, user_nickname, user_password, user_email, user_domain)
-		values (#{userId}, #{userName}, #{userNickname}, #{userPass}, #{userEmail}, #{userDomain})
+		insert into trip_member (user_id, user_name, user_nickname, user_password, user_email)
+		values (#{userId}, #{userName}, #{userNickname}, #{userPass}, #{userEmail})
 	</insert>
 	
 	<delete id="delete" parameterType="string">
@@ -39,7 +38,7 @@
 	</delete>
 	
 	<select id="getMyInfo" parameterType="string" resultMap="member">
-		select user_id, user_password, user_name, user_nickname, user_email, user_domain
+		select user_id, user_password, user_name, user_nickname, user_email
 		from trip_member
 		where user_id = #{userId}
 	</select>
@@ -47,7 +46,7 @@
 	<select id="findId" parameterMap="member" resultType="string">
 		select user_id
 		from trip_member
-		where user_email = #{userEmail} and user_domain = #{userDomain}
+		where user_email = #{userEmail}
 	</select>
 	
 	<select id="findPwd" parameterType="string" resultType="string">

@@ -72,8 +72,8 @@ public class PlanController {
 		
 	}
 
-	@GetMapping("/list/{word}")
-	public ResponseEntity<?> listByTitle(@PathVariable String word, @RequestBody String userId) {
+	@GetMapping("/list/{userId}/{word}")
+	public ResponseEntity<?> listByTitle(@PathVariable String userId, @PathVariable String word) {
 		logger.debug("search by title : {}", word);
 		HashMap<String, String> map = new HashMap<>();
 		map.put("word", word);
@@ -88,8 +88,8 @@ public class PlanController {
 		}
 	}
 
-	@GetMapping("/list")
-	public ResponseEntity<?> list(@RequestBody String userId) {
+	@GetMapping("/list/{userId}")
+	public ResponseEntity<?> list(@PathVariable String userId) {
 		logger.debug("list all plans userId : {}", userId);
 
 		try {

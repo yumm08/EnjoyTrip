@@ -50,12 +50,13 @@ public class MemberRestController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody MemberDto memberDto){
-//		System.out.println("memberDto : "+memberDto);
+		System.out.println("memberDto : "+memberDto);
 //		log.debug("login user : {}", memberDto);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
 			MemberDto loginUser = memberService.loginMember(memberDto);
+			System.out.println("loginUser : "+loginUser);
 			if(loginUser != null) {
 				String accessToken = jwtUtil.createAccessToken(loginUser.getUserId());
 				String refreshToken = jwtUtil.createRefreshToken(loginUser.getUserId());
@@ -63,8 +64,8 @@ public class MemberRestController {
 //				log.debug("refresh token : {}", refreshToken);
 				
 //				발급받은 refresh token을 DB에 저장.
-//				System.out.println("loginUser.getUserId() : " + loginUser.getUserId());
-//				System.out.println("refreshToken : " + refreshToken);
+				System.out.println("loginUser.getUserId() : " + loginUser.getUserId());
+				System.out.println("refreshToken : " + refreshToken);
 				memberService.saveRefreshToken(loginUser.getUserId(), refreshToken);
 				
 //				JSON으로 token 전달.
