@@ -15,6 +15,7 @@
     </resultMap>
 
     <resultMap type="planBoardDto" id="planArticleDetail" extends="planArticles">
+        <result column="article_content" property="articleContent" />
         <collection property="reviews" column="article_no" javaType="list" ofType="planReviewDto" select="getPlanReviews"/>
     </resultMap>
 
@@ -35,8 +36,8 @@
 
     <!-- insert -->
     <insert id="writePlanArticle" parameterType="planBoardDto">
-        insert into plan_board (user_id, article_title, plan_no, register_time)
-        values (#{userId}, #{articleTitle}, #{planNo}, #{registerTime})
+        insert into plan_board (user_id, article_title, article_content, plan_no, register_time)
+        values (#{userId}, #{articleTitle}, #{articleContent}, #{planNo}, #{registerTime})
         <selectKey resultType="int" keyProperty="articleNo"
                    order="AFTER">
             select last_insert_id()
@@ -59,7 +60,7 @@
     <!-- update -->
     <update id="modifyPlanArticle" parameterType="planBoardDto">
         update plan_board
-        set article_title = #{articleTitle}
+        set article_title = #{articleTitle}, article_content = #{articleContent}
         where article_no = #{articleNo}
     </update>
 
@@ -111,7 +112,7 @@
 
     <!-- view -->
     <select id="getPlanArticle" parameterType="int" resultMap="planArticleDetail">
-        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, m.user_nickname, pb.article_title, pb.article_content, pb.article_hit, pb.bookmark_cnt, pb.register_time
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         where pb.article_no = #{articleNo}

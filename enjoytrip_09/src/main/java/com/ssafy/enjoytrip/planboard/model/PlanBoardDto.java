@@ -16,6 +16,7 @@ public class PlanBoardDto {
     private String userId;
     private String userNickname;
     private String articleTitle;
+    private String articleContent;
     private int articleHit;
     private int bookmarkCnt;
     private int planNo;
