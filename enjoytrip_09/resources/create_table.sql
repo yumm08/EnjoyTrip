@@ -1,6 +1,6 @@
 use enjoytrip;
 
-Drop table trip_member;
+Drop table if exists trip_member;
 CREATE TABLE trip_member (
                              user_id       VARCHAR(20),
                              user_name     VARCHAR(20),
@@ -11,7 +11,7 @@ CREATE TABLE trip_member (
                              PRIMARY KEY(user_id)
 );
 
-Drop table free_board;
+Drop table if exists free_board;
 CREATE TABLE `free_board` (
                               `article_no` int NOT NULL AUTO_INCREMENT,
                               `user_id` varchar(16) DEFAULT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE `free_board` (
                               PRIMARY KEY (`article_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-Drop table plan_board;
+Drop table if exists plan_board;
 CREATE TABLE `plan_board` (
                               `article_no` int NOT NULL AUTO_INCREMENT,
                               `user_id` varchar(16) DEFAULT NULL,
@@ -35,6 +35,7 @@ CREATE TABLE `plan_board` (
                               PRIMARY KEY (`article_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+drop table if exists review;
 create table review
 (
     article_no int          not null,
@@ -43,7 +44,7 @@ create table review
     primary key (article_no, content_id)
 );
 
-Drop table plan_list;
+Drop table if exists plan_list;
 CREATE TABLE plan_list (
                            user_id         VARCHAR(20),
                            plan_no         int NOT NULL AUTO_INCREMENT,
@@ -52,7 +53,7 @@ CREATE TABLE plan_list (
                            PRIMARY KEY(plan_no, user_id)
 );
 
-Drop table plan_seq;
+Drop table if exists plan_seq;
 CREATE TABLE plan_seq (
                           plan_no       int,
                           plan_seq        int,
@@ -60,14 +61,14 @@ CREATE TABLE plan_seq (
                           PRIMARY KEY(plan_no, plan_seq)
 );
 
-Drop table bookmark;
+Drop table if exists bookmark;
 CREATE TABLE bookmark (
                           user_id         VARCHAR(20),
                           plan_no        int,
                           PRIMARY KEY(user_id, plan_no)
 );
 
-Drop table file_info;
+Drop table if exists file_info;
 CREATE TABLE file_info (
                            idx int not null auto_increment,
                            article_no int NULL,
@@ -77,12 +78,16 @@ CREATE TABLE file_info (
                            PRIMARY KEY (`idx`)
 );
 
-drop table contents;
+drop table if exists contents;
 CREATE TABLE contents (
                           content_type_id    int,
                           content_name       VARCHAR(20),
                           PRIMARY KEY(content_type_id)
 );
+
+INSERT INTO trip_member (user_id, user_name, user_nickname, user_password, user_email)
+VALUES ("ssafy", "송싸피", "싸피", "1234", "email@domain.com"),
+		("testId", "이름", "닉네임", "1234", "이메일@도메인.com");
 
 INSERT INTO contents (content_type_id, content_name)
 VALUES  (12, "관광지"),

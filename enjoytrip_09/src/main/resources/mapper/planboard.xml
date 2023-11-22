@@ -37,7 +37,7 @@
     <!-- insert -->
     <insert id="writePlanArticle" parameterType="planBoardDto">
         insert into plan_board (user_id, article_title, article_content, plan_no, register_time)
-        values (#{userId}, #{articleTitle}, #{articleContent}, #{planNo}, #{registerTime})
+        values (#{userId}, #{articleTitle}, #{articleContent}, #{planNo}, now())
         <selectKey resultType="int" keyProperty="articleNo"
                    order="AFTER">
             select last_insert_id()
