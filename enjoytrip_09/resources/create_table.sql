@@ -35,6 +35,14 @@ CREATE TABLE `plan_board` (
                               PRIMARY KEY (`article_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+create table review
+(
+    article_no int          not null,
+    content_id int          not null,
+    content    varchar(200) null,
+    primary key (article_no, content_id)
+);
+
 Drop table plan_list;
 CREATE TABLE plan_list (
                            user_id         VARCHAR(20),
