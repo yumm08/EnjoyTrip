@@ -13,7 +13,7 @@
 	</resultMap>
 
 	<resultMap type="planDto" id="listPlan" extends="plan">
-		<result column="image" property="img" />
+		<result column="image" property="image" />
 	</resultMap>
 
 	<resultMap type="planDto" id="getPlan" extends="plan">
@@ -24,7 +24,7 @@
 		<result column="content_id" property="contentId" />
 		<result column="plan_seq" property="planSeq" />
 		<result column="title" property="title" />
-		<result column="first_image" property="img" />
+		<result column="first_image" property="image" />
 		<result column="overview" property="overview" />
 	</resultMap>
 

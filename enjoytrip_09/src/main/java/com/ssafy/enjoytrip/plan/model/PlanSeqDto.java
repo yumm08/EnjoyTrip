@@ -16,6 +16,6 @@ public class PlanSeqDto {
 	private int planSeq;
 	private int contentId;
 	private String title;
-	private String img;
+	private String image;
 	private String overview;
 }

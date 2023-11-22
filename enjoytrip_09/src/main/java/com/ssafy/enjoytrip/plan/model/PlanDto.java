@@ -20,5 +20,5 @@ public class PlanDto {
 	private String planTitle;
 	private String updateTime;
 	List<PlanSeqDto> planSeqs;
-	private String img;
+	private String image;
 }
