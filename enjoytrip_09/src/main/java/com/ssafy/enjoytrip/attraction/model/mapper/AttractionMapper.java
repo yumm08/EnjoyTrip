@@ -12,6 +12,7 @@ import com.ssafy.enjoytrip.attraction.model.SidoGugunDto;
 @Mapper
 public interface AttractionMapper {
 	List<AttractionDto> searchTrip(SearchConditionDto searchConditionDto);
+//	List<AttractionDto> listPlanTrip(int articleNo);
 	List<SidoGugunDto> searchGugun(int sido);
 	List<SidoGugunDto> searchSido();
 	List<ContentTypeDto> searchContents();

@@ -17,6 +17,7 @@ public class AttractionDto {
 	private int contentId;
 	private int contentTypeId;
 	private String title;
+	private String overview;
 	private String addr;
 	private String image;
 	private BigDecimal latitude;

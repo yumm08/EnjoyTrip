@@ -28,6 +28,8 @@
         <result column="title" property="contentTitle" />
         <result column="first_image" property="image" />
         <result column="content" property="content" />
+        <result column="latitude" property="latitude" />
+        <result column="longitude" property="longitude" />
     </resultMap>
 
     <resultMap type="fileInfoDto" id="file">
@@ -142,7 +144,7 @@
     </select>
 
     <select id="getPlanReviews" resultMap="planReview">
-        select pb.article_no, s.plan_seq, s.content_id, a.title, a.first_image, r.content
+        select pb.article_no, s.plan_seq, s.content_id, a.title, a.first_image, r.content, a.latitude, a.longitude
         from plan_board pb join plan_seq s
                                 on pb.plan_no = s.plan_no
                            join review r

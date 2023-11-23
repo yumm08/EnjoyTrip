@@ -2,6 +2,8 @@ package com.ssafy.enjoytrip.planboard.model;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @ToString
@@ -14,4 +16,6 @@ public class PlanReviewDto {
     private String contentTitle;
     private String image;
     private String content;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
 }
