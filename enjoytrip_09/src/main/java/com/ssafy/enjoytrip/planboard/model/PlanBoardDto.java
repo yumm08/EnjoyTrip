@@ -21,6 +21,7 @@ public class PlanBoardDto {
     private int bookmarkCnt;
     private int planNo;
     private FileInfoDto img;
+    private String image;
     private List<PlanReviewDto> reviews;
     private String registerTime;
 

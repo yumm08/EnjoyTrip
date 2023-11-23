@@ -12,6 +12,7 @@
         <result column="article_hit" property="articleHit" />
         <result column="bookmark_cnt" property="bookmarkCnt" />
         <result column="register_time" property="registerTime" />
+        <result column="image" property="image" />
         <association property="img" column="article_no" javaType="FileInfoDto" select="getFile"/>
     </resultMap>
 
@@ -91,14 +92,28 @@
 
     <!-- list -->
     <select id="searchPlanAll" resultMap="planArticles">
-        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time,
+               (select a.first_image
+                from plan_seq s join attraction_info a
+                                on s.content_id = a.content_id
+                where pb.plan_no = s.plan_no
+                     and a.first_image != ""
+                order by s.plan_seq
+                limit 1) as image
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         order by pb.article_no desc
     </select>
 
     <select id="searchPlanByTitle" parameterType="String" resultMap="planArticles">
-        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time,
+            (select a.first_image
+                from plan_seq s join attraction_info a
+                                on s.content_id = a.content_id
+                where pb.plan_no = s.plan_no
+                     and a.first_image != ""
+                order by s.plan_seq
+                limit 1) as image
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         where pb.article_title like concat('%', #{word}, '%')
@@ -113,7 +128,14 @@
 
     <!-- view -->
     <select id="getPlanArticle" parameterType="int" resultMap="planArticleDetail">
-        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_content, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_content, pb.article_hit, pb.bookmark_cnt, pb.register_time,
+            (select a.first_image
+                from plan_seq s join attraction_info a
+                                on s.content_id = a.content_id
+                where pb.plan_no = s.plan_no
+                     and a.first_image != ""
+                order by s.plan_seq
+                limit 1) as image
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         where pb.article_no = #{articleNo}
