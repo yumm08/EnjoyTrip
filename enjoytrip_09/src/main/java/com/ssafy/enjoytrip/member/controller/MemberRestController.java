@@ -182,13 +182,12 @@ public class MemberRestController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> delete(HttpSession session) {
-		MemberDto userinfo = ((MemberDto)session.getAttribute("userinfo"));
-		System.out.println("delete : "+userinfo);
+	@DeleteMapping("/delete/{userId}")
+	public ResponseEntity<?> delete(@PathVariable("userId") String userId) {
+		System.out.println("delete : "+userId);
 		
 		try {
-			memberService.delete(userinfo.getUserId());
+			memberService.delete(userId);
 			return new ResponseEntity<String>("Bye !!", HttpStatus.OK);
 		} catch(Exception e) {
 			return new ResponseEntity<String>("Can't Delete ..", HttpStatus.INTERNAL_SERVER_ERROR);
