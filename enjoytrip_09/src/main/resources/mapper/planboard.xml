@@ -6,6 +6,7 @@
 
     <resultMap type="planBoardDto" id="planArticles">
         <result column="article_no" property="articleNo" />
+        <result column="user_id" property="userId" />
         <result column="user_nickname" property="userNickname" />
         <result column="article_title" property="articleTitle" />
         <result column="article_hit" property="articleHit" />
@@ -15,7 +16,6 @@
     </resultMap>
 
     <resultMap type="planBoardDto" id="planArticleDetail" extends="planArticles">
-        <result column="user_id" property="userId" />
         <result column="article_content" property="articleContent" />
         <collection property="reviews" column="article_no" javaType="list" ofType="planReviewDto" select="getPlanReviews"/>
     </resultMap>
@@ -91,14 +91,14 @@
 
     <!-- list -->
     <select id="searchPlanAll" resultMap="planArticles">
-        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         order by pb.article_no desc
     </select>
 
     <select id="searchPlanByTitle" parameterType="String" resultMap="planArticles">
-        select pb.article_no, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
+        select pb.article_no, pb.user_id, m.user_nickname, pb.article_title, pb.article_hit, pb.bookmark_cnt, pb.register_time
         from plan_board pb join trip_member m
                                 on pb.user_id = m.user_id
         where pb.article_title like concat('%', #{word}, '%')
